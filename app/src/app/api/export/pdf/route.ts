@@ -29,7 +29,7 @@ ${html}
   const pdf = await exportPdf(fullHtml);
   const slug = title.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
-  return new NextResponse(pdf, {
+  return new NextResponse(pdf as unknown as BodyInit, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${slug}.pdf"`,
