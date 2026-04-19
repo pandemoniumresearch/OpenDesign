@@ -18,6 +18,10 @@ renderer/dist/
 spikes/video-spike/output*.mp4
 spikes/llm-spike/output*.html
 
+# Python virtual environments
+venv/
+.venv/
+
 # OS
 .DS_Store
 Thumbs.db
