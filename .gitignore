@@ -1,0 +1,30 @@
+# Node
+node_modules/
+.pnp/
+
+# Next.js
+app/.next/
+app/out/
+
+# Env files (never commit these)
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+renderer/dist/
+
+# Spike outputs
+spikes/video-spike/output*.mp4
+spikes/llm-spike/output*.html
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
