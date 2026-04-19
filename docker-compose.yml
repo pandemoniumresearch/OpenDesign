@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - VIDEO_RENDERER_URL=http://renderer:3001
+    env_file:
+      - ./app/.env.local
+    depends_on:
+      - renderer
+
+  renderer:
+    build:
+      context: ./renderer
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - CHROME_PATH=/usr/bin/google-chrome-stable
+    # 2 CPUs / 4GB recommended for 1080p60 rendering
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4g
