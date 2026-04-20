@@ -43,22 +43,28 @@ export function HistoryPanel({ projectId, onLoad }: HistoryPanelProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <span className="animate-spin h-4 w-4 border-[1.5px] border-white/10 border-t-slate-500 rounded-full" />
+        <span
+          className="animate-spin h-4 w-4 rounded-full"
+          style={{ border: '1.5px solid var(--bd-2)', borderTopColor: 'var(--ac)' }}
+        />
       </div>
     );
   }
 
   if (error) {
-    return <p className="text-[10px] text-red-400 px-1 py-2">{error}</p>;
+    return <p className="text-[10px] px-1 py-2" style={{ color: 'var(--err)' }}>{error}</p>;
   }
 
   if (artifacts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-10 px-2 text-center">
-        <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-3">
-          <span className="text-slate-600 text-base font-mono">◈</span>
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+          style={{ background: 'var(--bg-canvas)', border: '1px solid var(--bd-1)' }}
+        >
+          <span className="text-base font-mono" style={{ color: 'var(--t5)' }}>◈</span>
         </div>
-        <p className="text-[10px] text-slate-600 leading-relaxed">No artifacts yet.<br />Generate something to get started.</p>
+        <p className="text-[10px] leading-relaxed" style={{ color: 'var(--t5)' }}>No artifacts yet.<br />Generate something to get started.</p>
       </div>
     );
   }
@@ -68,8 +74,8 @@ export function HistoryPanel({ projectId, onLoad }: HistoryPanelProps) {
       <div className="flex items-center justify-end px-1 mb-1">
         <button
           onClick={fetchArtifacts}
-          className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors p-1 rounded hover:bg-white/[0.05]"
-          title="Refresh"
+          className="text-[10px] transition-colors p-1 rounded"
+          style={{ color: 'var(--t5)' }}
         >
           ↺ Refresh
         </button>
@@ -78,18 +84,19 @@ export function HistoryPanel({ projectId, onLoad }: HistoryPanelProps) {
         <button
           key={artifact.id}
           onClick={() => handleLoad(artifact)}
-          className="w-full text-left rounded-lg overflow-hidden border border-white/[0.06] hover:border-indigo-500/30 bg-white/[0.03] hover:bg-indigo-500/[0.06] transition-all group"
+          className="w-full text-left rounded-lg overflow-hidden transition-all group"
+          style={{ border: '1px solid var(--bd-1)', background: 'var(--bg-card)' }}
         >
           {/* Thumbnail strip */}
           <div
-            className="w-full h-8 opacity-60 group-hover:opacity-80 transition-opacity"
-            style={{ background: THUMB_GRADIENTS[i % THUMB_GRADIENTS.length] }}
+            className="w-full h-8 opacity-80 group-hover:opacity-100 transition-opacity"
+            style={{ background: `var(--thumb-${(i % 6) + 1})` }}
           />
           <div className="px-2.5 py-2">
-            <p className="text-[11px] font-medium text-slate-300 truncate group-hover:text-white transition-colors">
+            <p className="text-[11px] font-medium truncate transition-colors" style={{ color: 'var(--t2)' }}>
               {artifact.document.title || 'Untitled'}
             </p>
-            <p className="text-[10px] text-slate-600 mt-0.5 truncate">
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: 'var(--t5)' }}>
               {new Date(artifact.created_at).toLocaleString(undefined, {
                 month: 'short', day: 'numeric',
                 hour: '2-digit', minute: '2-digit',
@@ -101,12 +108,3 @@ export function HistoryPanel({ projectId, onLoad }: HistoryPanelProps) {
     </div>
   );
 }
-
-const THUMB_GRADIENTS = [
-  'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-  'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
-  'linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)',
-  'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
-  'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
-  'linear-gradient(135deg, #14b8a6 0%, #6366f1 100%)',
-];

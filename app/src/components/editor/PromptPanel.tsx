@@ -48,24 +48,33 @@ export function PromptPanel({ projectId, provider, brandContext, onGenerate }: P
       <textarea
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder={'Describe what to design…\ne.g. A dark hero section with animated gradient and CTA button'}
+        placeholder={'Describe what to design…\ne.g. A hero section with animated gradient and CTA button'}
         rows={5}
-        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:border-indigo-500/50 focus:bg-white/[0.06] transition-all leading-relaxed"
+        className="w-full rounded-lg px-3 py-2.5 text-xs resize-none focus:outline-none transition-all leading-relaxed"
+        style={{
+          background: 'var(--bg-input)',
+          border: '1px solid var(--bd-1)',
+          color: 'var(--t1)',
+        }}
         disabled={loading}
       />
       {error && (
-        <p className="text-xs text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-3 py-2 leading-relaxed">
+        <p
+          className="text-xs rounded-lg px-3 py-2 leading-relaxed"
+          style={{ color: 'var(--err)', background: 'var(--err-bg)', border: '1px solid var(--err-bd)' }}
+        >
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={!prompt.trim() || loading}
-        className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+        className="w-full py-2 rounded-lg font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 text-white disabled:opacity-40 disabled:cursor-not-allowed"
+        style={{ background: 'var(--ac)' }}
       >
         {loading ? (
           <>
-            <span className="animate-spin h-3 w-3 border-[1.5px] border-white/30 border-t-white rounded-full" />
+            <span className="animate-spin h-3 w-3 rounded-full" style={{ border: '1.5px solid rgba(255,255,255,0.3)', borderTopColor: 'white' }} />
             Generating…
           </>
         ) : (

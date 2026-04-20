@@ -50,16 +50,29 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com"
-          className="flex-1 min-w-0 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.06] transition-all"
+          className="flex-1 min-w-0 rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
+          style={{
+            background: 'var(--bg-input)',
+            border: '1px solid var(--bd-1)',
+            color: 'var(--t1)',
+          }}
           disabled={loading}
         />
         <button
           type="submit"
           disabled={!url.trim() || loading}
-          className="px-3 py-2 bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/20 hover:border-violet-500/40 disabled:opacity-40 text-violet-300 rounded-lg text-xs font-medium transition-all whitespace-nowrap"
+          className="px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap disabled:opacity-40"
+          style={{
+            background: 'var(--ac-15)',
+            border: '1px solid var(--ac-bd-25)',
+            color: 'var(--ac)',
+          }}
         >
           {loading ? (
-            <span className="animate-spin h-3 w-3 border-[1.5px] border-violet-400/30 border-t-violet-400 rounded-full inline-block" />
+            <span
+              className="animate-spin h-3 w-3 rounded-full inline-block"
+              style={{ border: '1.5px solid var(--ac-bd-25)', borderTopColor: 'var(--ac)' }}
+            />
           ) : (
             'Extract'
           )}
@@ -67,32 +80,35 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
       </form>
 
       {error && (
-        <p className="text-xs text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-3 py-2">
+        <p
+          className="text-xs rounded-lg px-3 py-2"
+          style={{ color: 'var(--err)', background: 'var(--err-bg)', border: '1px solid var(--err-bd)' }}
+        >
           {error}
         </p>
       )}
 
       {brand && Array.isArray(brand.colors) && (
-        <div className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3 space-y-2.5">
+        <div className="rounded-lg p-3 space-y-2.5" style={{ background: 'var(--bg-card)', border: '1px solid var(--bd-1)' }}>
           <div className="flex flex-wrap gap-1">
             {brand.colors.slice(0, 12).map((c, i) => (
               <span
                 key={i}
                 title={c}
-                className="w-5 h-5 rounded-md border border-black/20 flex-shrink-0 shadow-sm"
-                style={{ background: c }}
+                className="w-5 h-5 rounded-md flex-shrink-0 shadow-sm"
+                style={{ background: c, border: '1px solid rgba(0,0,0,0.10)' }}
               />
             ))}
           </div>
           {brand.fontFamilies.length > 0 && (
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] text-slate-600 font-medium">Fonts:</span>
-              <span className="text-[10px] text-slate-400">{brand.fontFamilies.slice(0, 3).join(', ')}</span>
+              <span className="text-[10px] font-medium" style={{ color: 'var(--t5)' }}>Fonts:</span>
+              <span className="text-[10px]" style={{ color: 'var(--t3)' }}>{brand.fontFamilies.slice(0, 3).join(', ')}</span>
             </div>
           )}
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-            <span className="text-[10px] text-emerald-400 font-medium">Active — used in next generation</span>
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--ok)' }} />
+            <span className="text-[10px] font-medium" style={{ color: 'var(--ok)' }}>Active — used in next generation</span>
           </div>
         </div>
       )}

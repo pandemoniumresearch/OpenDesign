@@ -16,7 +16,16 @@ export function DeleteProjectButton({ projectId, projectName, deleteAction }: De
       <button
         type="submit"
         title="Delete project"
-        className="w-6 h-6 flex items-center justify-center rounded-md text-slate-600 hover:text-red-400 hover:bg-slate-800 transition-colors text-xs"
+        className="w-6 h-6 flex items-center justify-center rounded-md transition-colors text-xs"
+        style={{ color: 'var(--t5)' }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--err)';
+          (e.currentTarget as HTMLButtonElement).style.background = 'var(--err-bg)';
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--t5)';
+          (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+        }}
         onClick={(e) => {
           if (!confirm(`Delete "${projectName}"?`)) e.preventDefault();
         }}

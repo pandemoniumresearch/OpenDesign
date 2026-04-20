@@ -6,6 +6,7 @@ import { ProviderSelector } from '@/components/editor/ProviderSelector';
 import { BrandTokenPanel } from '@/components/editor/BrandTokenPanel';
 import { ExportPanel } from '@/components/editor/ExportPanel';
 import { HistoryPanel } from '@/components/editor/HistoryPanel';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import type { Provider } from '@/lib/ai/providers';
 import type { Prototype } from '@/lib/ai/generate-prototype';
 import type { BrandContext } from '@/lib/ingestion/from-url';
@@ -44,50 +45,50 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#0d0d12] text-slate-100">
+    <div className="h-screen flex flex-col" style={{ background: 'var(--bg-page)', color: 'var(--t1)' }}>
       {/* Top bar */}
-      <header className="flex items-center gap-3 px-4 h-11 border-b border-white/[0.06] shrink-0 bg-[#111118]">
+      <header className="flex items-center gap-3 px-4 h-11 border-b shrink-0" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
         <a
           href="/dashboard"
-          className="flex items-center gap-1.5 text-slate-500 hover:text-slate-200 transition-colors shrink-0 group"
+          className="flex items-center gap-1.5 transition-colors shrink-0 group"
+          style={{ color: 'var(--t4)' }}
         >
           <ChevronLeftIcon />
           <span className="text-xs font-medium">Projects</span>
         </a>
-        <div className="w-px h-4 bg-white/[0.08] shrink-0" />
+        <div className="w-px h-4 shrink-0" style={{ background: 'var(--bd-2)' }} />
         <input
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          className="flex-1 min-w-0 text-sm font-medium text-slate-200 bg-transparent focus:outline-none truncate placeholder-slate-600 hover:text-white focus:text-white transition-colors"
+          className="flex-1 min-w-0 text-sm font-medium bg-transparent focus:outline-none truncate transition-colors"
+          style={{ color: 'var(--t2)' }}
           placeholder="Untitled Project"
           aria-label="Project name"
         />
-        <div className="ml-auto flex items-center gap-2.5 shrink-0">
+        <div className="ml-auto flex items-center gap-2 shrink-0">
           <ProviderSelector value={provider} onChange={setProvider} compact />
-          <div className="w-px h-4 bg-white/[0.08]" />
+          <div className="w-px h-4" style={{ background: 'var(--bd-2)' }} />
+          <ThemeToggle />
           <LogoMark />
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left: Artifacts panel */}
-        <aside className="w-[196px] shrink-0 flex flex-col border-r border-white/[0.06] bg-[#111118] overflow-hidden">
+        <aside className="w-[196px] shrink-0 flex flex-col border-r overflow-hidden" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
           <SectionHeader label="Artifacts" />
           <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pb-3">
-            <HistoryPanel
-              projectId={projectId}
-              onLoad={handleGenerated}
-            />
+            <HistoryPanel projectId={projectId} onLoad={handleGenerated} />
           </div>
         </aside>
 
         {/* Center: Canvas */}
-        <main className="flex-1 flex flex-col overflow-hidden bg-[#09090e]">
-          <div className="flex items-center px-4 h-10 border-b border-white/[0.06] shrink-0 bg-[#0d0d12] gap-2">
+        <main className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--bg-canvas)' }}>
+          <div className="flex items-center px-4 h-10 border-b shrink-0 gap-2" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
             <CanvasTab active>Prototype</CanvasTab>
             <div className="ml-auto flex items-center gap-2">
               {prototype && (
-                <span className="text-[10px] text-slate-600 font-mono truncate max-w-[160px]">
+                <span className="text-[10px] font-mono truncate max-w-[160px]" style={{ color: 'var(--t5)' }}>
                   {prototype.title}
                 </span>
               )}
@@ -99,9 +100,8 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
         </main>
 
         {/* Right: AI Command panel */}
-        <aside className="w-[268px] shrink-0 flex flex-col border-l border-white/[0.06] overflow-y-auto bg-[#111118]">
-          {/* AI Generation */}
-          <PanelSection icon={<SparkleIcon />} iconBg="bg-indigo-500/15" label="AI Generation">
+        <aside className="w-[268px] shrink-0 flex flex-col border-l overflow-y-auto" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
+          <PanelSection icon={<SparkleIcon />} iconBg="var(--ac-15)" label="AI Generation">
             <PromptPanel
               projectId={projectId}
               provider={provider}
@@ -112,8 +112,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
 
           <PanelDivider />
 
-          {/* Brand Tokens */}
-          <PanelSection icon={<TokenIcon />} iconBg="bg-violet-500/15" label="Brand Tokens">
+          <PanelSection icon={<TokenIcon />} iconBg="var(--ac2-15)" label="Brand Tokens">
             <BrandTokenPanel
               projectId={projectId}
               initialBrandContext={initialBrandContext}
@@ -123,8 +122,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
 
           <PanelDivider />
 
-          {/* Export */}
-          <PanelSection icon={<ExportIcon />} iconBg="bg-emerald-500/15" label="Export">
+          <PanelSection icon={<ExportIcon />} iconBg="var(--ac3-15)" label="Export">
             <ExportPanel prototype={prototype} fullHtml={fullHtml} artifactId={artifactId} />
           </PanelSection>
         </aside>
@@ -138,7 +136,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
 function SectionHeader({ label }: { label: string }) {
   return (
     <div className="px-3 pt-3 pb-2 shrink-0">
-      <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{label}</span>
+      <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--t4)' }}>{label}</span>
     </div>
   );
 }
@@ -151,10 +149,10 @@ function PanelSection({
   return (
     <section className="flex flex-col gap-3 p-4">
       <div className="flex items-center gap-2">
-        <span className={`w-5 h-5 rounded-md ${iconBg} flex items-center justify-center flex-shrink-0`}>
+        <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: iconBg }}>
           {icon}
         </span>
-        <span className="text-xs font-semibold text-slate-200">{label}</span>
+        <span className="text-xs font-semibold" style={{ color: 'var(--t1)' }}>{label}</span>
       </div>
       {children}
     </section>
@@ -162,17 +160,17 @@ function PanelSection({
 }
 
 function PanelDivider() {
-  return <div className="h-px bg-white/[0.05] mx-4 shrink-0" />;
+  return <div className="h-px mx-4 shrink-0" style={{ background: 'var(--bd-1)' }} />;
 }
 
 function CanvasTab({ children, active }: { children: React.ReactNode; active?: boolean }) {
   return (
     <button
-      className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-        active
-          ? 'bg-indigo-500/15 text-indigo-300'
-          : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.05]'
-      }`}
+      className="px-2.5 py-1 rounded text-xs font-medium transition-colors"
+      style={active
+        ? { background: 'var(--ac-15)', color: 'var(--ac)' }
+        : { color: 'var(--t4)' }
+      }
     >
       {children}
     </button>
@@ -192,7 +190,7 @@ function ChevronLeftIcon() {
 function SparkleIcon() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <path d="M5 1L5.9 3.6L8.5 3.6L6.4 5.2L7.3 7.8L5 6.2L2.7 7.8L3.6 5.2L1.5 3.6L4.1 3.6L5 1Z" fill="#818cf8" />
+      <path d="M5 1L5.9 3.6L8.5 3.6L6.4 5.2L7.3 7.8L5 6.2L2.7 7.8L3.6 5.2L1.5 3.6L4.1 3.6L5 1Z" style={{ fill: 'var(--ac)' }} />
     </svg>
   );
 }
@@ -200,8 +198,8 @@ function SparkleIcon() {
 function TokenIcon() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <circle cx="5" cy="5" r="3.5" stroke="#a78bfa" strokeWidth="1.4" />
-      <circle cx="5" cy="5" r="1.5" fill="#a78bfa" />
+      <circle cx="5" cy="5" r="3.5" style={{ stroke: 'var(--ac2)' }} strokeWidth="1.4" />
+      <circle cx="5" cy="5" r="1.5" style={{ fill: 'var(--ac2)' }} />
     </svg>
   );
 }
@@ -209,7 +207,7 @@ function TokenIcon() {
 function ExportIcon() {
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <path d="M5 1.5V6.5M3 4.5L5 6.5L7 4.5M2.5 8.5H7.5" stroke="#34d399" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 1.5V6.5M3 4.5L5 6.5L7 4.5M2.5 8.5H7.5" style={{ stroke: 'var(--ac3)' }} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -217,8 +215,8 @@ function ExportIcon() {
 function LogoMark() {
   return (
     <span className="text-xs font-bold tracking-tight">
-      <span className="text-indigo-400">Open</span>
-      <span className="text-slate-400">Design</span>
+      <span style={{ color: 'var(--ac)' }}>Open</span>
+      <span style={{ color: 'var(--t4)' }}>Design</span>
     </span>
   );
 }

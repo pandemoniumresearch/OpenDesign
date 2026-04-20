@@ -10,10 +10,10 @@ interface ExportPanelProps {
 
 type ExportFormat = 'html' | 'pdf' | 'video';
 
-const FORMATS: { format: ExportFormat; label: string; ext: string; desc: string; iconColor: string; iconBg: string }[] = [
-  { format: 'html',  label: 'HTML Bundle', ext: '.zip', desc: 'Static HTML/CSS/JS', iconColor: 'text-sky-400',   iconBg: 'bg-sky-500/10' },
-  { format: 'pdf',   label: 'PDF',         ext: '.pdf', desc: 'Selectable text',    iconColor: 'text-rose-400',  iconBg: 'bg-rose-500/10' },
-  { format: 'video', label: 'MP4 Video',   ext: '.mp4', desc: 'Deterministic 60fps', iconColor: 'text-amber-400', iconBg: 'bg-amber-500/10' },
+const FORMATS: { format: ExportFormat; label: string; ext: string; desc: string; colorVar: string; bgVar: string }[] = [
+  { format: 'html',  label: 'HTML Bundle', ext: '.zip', desc: 'Static HTML/CSS/JS', colorVar: 'var(--sky)',  bgVar: 'var(--sky-15)' },
+  { format: 'pdf',   label: 'PDF',         ext: '.pdf', desc: 'Selectable text',    colorVar: 'var(--rose)', bgVar: 'var(--rose-15)' },
+  { format: 'video', label: 'MP4 Video',   ext: '.mp4', desc: 'Deterministic 60fps', colorVar: 'var(--amb)', bgVar: 'var(--amb-15)' },
 ];
 
 export function ExportPanel({ prototype, fullHtml, artifactId }: ExportPanelProps) {
@@ -66,35 +66,42 @@ export function ExportPanel({ prototype, fullHtml, artifactId }: ExportPanelProp
 
   return (
     <div className="flex flex-col gap-1.5">
-      {FORMATS.map(({ format, label, ext, desc, iconColor, iconBg }) => {
+      {FORMATS.map(({ format, label, ext, desc, colorVar, bgVar }) => {
         const isLoading = exporting === format;
         return (
           <button
             key={format}
             onClick={() => doExport(format)}
             disabled={disabled || !!exporting}
-            className="flex items-center gap-2.5 px-3 py-2.5 bg-white/3 hover:bg-white/6 border border-white/[0.07] hover:border-white/12 disabled:opacity-35 disabled:cursor-not-allowed rounded-lg transition-all text-left group"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all text-left group disabled:opacity-35 disabled:cursor-not-allowed"
+            style={{ background: 'var(--bg-card)', border: '1px solid var(--bd-1)' }}
           >
             {/* Icon badge */}
-            <div className={`w-7 h-7 rounded-md ${iconBg} flex items-center justify-center shrink-0`}>
+            <div
+              className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
+              style={{ background: bgVar }}
+            >
               {isLoading
-                ? <span className="animate-spin h-3 w-3 border-[1.5px] border-white/20 border-t-white/70 rounded-full" />
-                : <span className={`text-[10px] font-bold font-mono ${iconColor}`}>{ext}</span>
+                ? <span
+                    className="animate-spin h-3 w-3 rounded-full"
+                    style={{ border: '1.5px solid var(--ac-15)', borderTopColor: 'var(--ac)' }}
+                  />
+                : <span className="text-[10px] font-bold font-mono" style={{ color: colorVar }}>{ext}</span>
               }
             </div>
             {/* Label + desc */}
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium text-slate-200 group-hover:text-white transition-colors leading-none">
+              <p className="text-xs font-medium leading-none transition-colors" style={{ color: 'var(--t1)' }}>
                 {isLoading ? 'Exporting…' : label}
               </p>
-              <p className="text-[10px] text-slate-600 mt-1 leading-none">{desc}</p>
+              <p className="text-[10px] mt-1 leading-none" style={{ color: 'var(--t5)' }}>{desc}</p>
             </div>
           </button>
         );
       })}
-      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+      {error && <p className="text-xs mt-1" style={{ color: 'var(--err)' }}>{error}</p>}
       {disabled && (
-        <p className="text-[10px] text-slate-600 text-center mt-1">Generate a prototype first</p>
+        <p className="text-[10px] text-center mt-1" style={{ color: 'var(--t5)' }}>Generate a prototype first</p>
       )}
     </div>
   );
