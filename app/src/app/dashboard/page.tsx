@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { UserButton } from '@clerk/nextjs';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { DeleteProjectButton } from './DeleteProjectButton';
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -59,22 +60,11 @@ export default async function DashboardPage() {
                     })}
                   </p>
                 </Link>
-                <form
-                  action={deleteProject}
-                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <input type="hidden" name="projectId" value={project.id} />
-                  <button
-                    type="submit"
-                    title="Delete project"
-                    className="w-6 h-6 flex items-center justify-center rounded-md text-slate-600 hover:text-red-400 hover:bg-slate-800 transition-colors text-xs"
-                    onClick={(e) => {
-                      if (!confirm(`Delete "${project.name}"?`)) e.preventDefault();
-                    }}
-                  >
-                    ✕
-                  </button>
-                </form>
+                <DeleteProjectButton
+                  projectId={project.id}
+                  projectName={project.name}
+                  deleteAction={deleteProject}
+                />
               </div>
             ))}
           </div>
