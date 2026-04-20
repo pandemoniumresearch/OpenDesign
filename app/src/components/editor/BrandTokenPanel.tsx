@@ -67,7 +67,7 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
         <p className="text-xs text-red-400">{error}</p>
       )}
 
-      {brand && (
+      {brand && Array.isArray(brand.colors) && (
         <div className="bg-slate-800/50 rounded-lg p-3 text-xs space-y-2">
           <div>
             <span className="text-slate-500">Colors: </span>

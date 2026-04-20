@@ -27,7 +27,11 @@ export default async function EditorPage({ params }: Props) {
     <EditorClient
       projectId={project.id}
       projectName={project.name}
-      initialBrandContext={(project.brand_context ?? null) as BrandContext | null}
+      initialBrandContext={
+        project.brand_context && Array.isArray((project.brand_context as BrandContext).colors)
+          ? (project.brand_context as BrandContext)
+          : null
+      }
     />
   );
 }
