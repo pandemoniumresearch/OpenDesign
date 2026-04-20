@@ -5,6 +5,7 @@ import { PromptPanel } from '@/components/editor/PromptPanel';
 import { ProviderSelector } from '@/components/editor/ProviderSelector';
 import { BrandTokenPanel } from '@/components/editor/BrandTokenPanel';
 import { ExportPanel } from '@/components/editor/ExportPanel';
+import { HistoryPanel } from '@/components/editor/HistoryPanel';
 import type { Provider } from '@/lib/ai/providers';
 import type { Prototype } from '@/lib/ai/generate-prototype';
 import type { BrandContext } from '@/lib/ingestion/from-url';
@@ -47,6 +48,13 @@ export function EditorClient({ projectId, projectName }: EditorClientProps) {
             }}
           />
           <ExportPanel prototype={prototype} fullHtml={fullHtml} />
+          <HistoryPanel
+            projectId={projectId}
+            onLoad={({ fullHtml: h, prototype: p }) => {
+              setFullHtml(h);
+              setPrototype(p);
+            }}
+          />
         </aside>
 
         {/* Canvas area */}
