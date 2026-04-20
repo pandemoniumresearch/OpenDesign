@@ -37,84 +37,188 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
     }, 600);
   }
 
+  function handleGenerated(result: { fullHtml: string; prototype: Prototype; artifactId?: string }) {
+    setFullHtml(result.fullHtml);
+    setPrototype(result.prototype);
+    setArtifactId(result.artifactId);
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="h-screen flex flex-col bg-[#0d0d12] text-slate-100">
       {/* Top bar */}
-      <header className="flex items-center gap-3 px-4 py-2.5 border-b border-slate-800 shrink-0 bg-slate-950">
-        <a href="/dashboard" className="text-slate-500 hover:text-slate-300 text-sm transition-colors shrink-0 flex items-center gap-1.5">
-          <span className="text-xs">←</span>
+      <header className="flex items-center gap-3 px-4 h-11 border-b border-white/[0.06] shrink-0 bg-[#111118]">
+        <a
+          href="/dashboard"
+          className="flex items-center gap-1.5 text-slate-500 hover:text-slate-200 transition-colors shrink-0 group"
+        >
+          <ChevronLeftIcon />
           <span className="text-xs font-medium">Projects</span>
         </a>
-        <div className="h-4 w-px bg-slate-800 shrink-0" />
+        <div className="w-px h-4 bg-white/[0.08] shrink-0" />
         <input
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          className="flex-1 min-w-0 text-sm font-medium text-white bg-transparent focus:outline-none truncate placeholder-slate-600"
+          className="flex-1 min-w-0 text-sm font-medium text-slate-200 bg-transparent focus:outline-none truncate placeholder-slate-600 hover:text-white focus:text-white transition-colors"
           placeholder="Untitled Project"
           aria-label="Project name"
         />
-        <div className="shrink-0">
+        <div className="ml-auto flex items-center gap-2.5 shrink-0">
           <ProviderSelector value={provider} onChange={setProvider} compact />
+          <div className="w-px h-4 bg-white/[0.08]" />
+          <LogoMark />
         </div>
-        <div className="h-4 w-px bg-slate-800 shrink-0" />
-        <span className="text-xs text-slate-700 shrink-0 font-medium tracking-wide">OpenDesign</span>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left panel */}
-        <aside className="w-64 shrink-0 flex flex-col border-r border-slate-800 overflow-y-auto bg-slate-900/40">
-          <div className="flex flex-col gap-0 p-4 pb-0">
+        {/* Left: Artifacts panel */}
+        <aside className="w-[196px] shrink-0 flex flex-col border-r border-white/[0.06] bg-[#111118] overflow-hidden">
+          <SectionHeader label="Artifacts" />
+          <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pb-3">
+            <HistoryPanel
+              projectId={projectId}
+              onLoad={handleGenerated}
+            />
+          </div>
+        </aside>
+
+        {/* Center: Canvas */}
+        <main className="flex-1 flex flex-col overflow-hidden bg-[#09090e]">
+          <div className="flex items-center px-4 h-10 border-b border-white/[0.06] shrink-0 bg-[#0d0d12] gap-2">
+            <CanvasTab active>Prototype</CanvasTab>
+            <div className="ml-auto flex items-center gap-2">
+              {prototype && (
+                <span className="text-[10px] text-slate-600 font-mono truncate max-w-[160px]">
+                  {prototype.title}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <CanvasPreview html={fullHtml} />
+          </div>
+        </main>
+
+        {/* Right: AI Command panel */}
+        <aside className="w-[268px] shrink-0 flex flex-col border-l border-white/[0.06] overflow-y-auto bg-[#111118]">
+          {/* AI Generation */}
+          <PanelSection icon={<SparkleIcon />} iconBg="bg-indigo-500/15" label="AI Generation">
             <PromptPanel
               projectId={projectId}
               provider={provider}
               brandContext={brandContext?.brandContextString}
-              onGenerate={({ fullHtml: h, prototype: p, artifactId: id }) => {
-                setFullHtml(h);
-                setPrototype(p);
-                setArtifactId(id);
-              }}
+              onGenerate={handleGenerated}
             />
-          </div>
+          </PanelSection>
 
-          <Divider />
+          <PanelDivider />
 
-          <div className="px-4">
+          {/* Brand Tokens */}
+          <PanelSection icon={<TokenIcon />} iconBg="bg-violet-500/15" label="Brand Tokens">
             <BrandTokenPanel
               projectId={projectId}
               initialBrandContext={initialBrandContext}
               onIngested={(ctx) => setBrandContext(ctx)}
             />
-          </div>
+          </PanelSection>
 
-          <Divider />
+          <PanelDivider />
 
-          <div className="px-4">
+          {/* Export */}
+          <PanelSection icon={<ExportIcon />} iconBg="bg-emerald-500/15" label="Export">
             <ExportPanel prototype={prototype} fullHtml={fullHtml} artifactId={artifactId} />
-          </div>
-
-          <Divider />
-
-          <div className="px-4 pb-4">
-            <HistoryPanel
-              projectId={projectId}
-              onLoad={({ fullHtml: h, prototype: p, artifactId: id }) => {
-                setFullHtml(h);
-                setPrototype(p);
-                setArtifactId(id);
-              }}
-            />
-          </div>
+          </PanelSection>
         </aside>
-
-        {/* Canvas */}
-        <main className="flex-1 overflow-hidden bg-[#0c0c0f]">
-          <CanvasPreview html={fullHtml} />
-        </main>
       </div>
     </div>
   );
 }
 
-function Divider() {
-  return <div className="h-px bg-slate-800 mx-4 my-4 shrink-0" />;
+// ─── Layout primitives ────────────────────────────────────────────────────────
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <div className="px-3 pt-3 pb-2 shrink-0">
+      <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{label}</span>
+    </div>
+  );
+}
+
+function PanelSection({
+  icon, iconBg, label, children,
+}: {
+  icon: React.ReactNode; iconBg: string; label: string; children: React.ReactNode;
+}) {
+  return (
+    <section className="flex flex-col gap-3 p-4">
+      <div className="flex items-center gap-2">
+        <span className={`w-5 h-5 rounded-md ${iconBg} flex items-center justify-center flex-shrink-0`}>
+          {icon}
+        </span>
+        <span className="text-xs font-semibold text-slate-200">{label}</span>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function PanelDivider() {
+  return <div className="h-px bg-white/[0.05] mx-4 shrink-0" />;
+}
+
+function CanvasTab({ children, active }: { children: React.ReactNode; active?: boolean }) {
+  return (
+    <button
+      className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+        active
+          ? 'bg-indigo-500/15 text-indigo-300'
+          : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.05]'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+function ChevronLeftIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <path d="M8 2.5L4.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M5 1L5.9 3.6L8.5 3.6L6.4 5.2L7.3 7.8L5 6.2L2.7 7.8L3.6 5.2L1.5 3.6L4.1 3.6L5 1Z" fill="#818cf8" />
+    </svg>
+  );
+}
+
+function TokenIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <circle cx="5" cy="5" r="3.5" stroke="#a78bfa" strokeWidth="1.4" />
+      <circle cx="5" cy="5" r="1.5" fill="#a78bfa" />
+    </svg>
+  );
+}
+
+function ExportIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M5 1.5V6.5M3 4.5L5 6.5L7 4.5M2.5 8.5H7.5" stroke="#34d399" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LogoMark() {
+  return (
+    <span className="text-xs font-bold tracking-tight">
+      <span className="text-indigo-400">Open</span>
+      <span className="text-slate-400">Design</span>
+    </span>
+  );
 }

@@ -43,50 +43,57 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <label className="text-xs font-medium text-slate-400 uppercase tracking-wider">Brand tokens</label>
-      <form onSubmit={handleIngest} className="flex gap-2">
+    <div className="flex flex-col gap-2.5">
+      <form onSubmit={handleIngest} className="flex gap-1.5">
         <input
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com"
-          className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+          className="flex-1 min-w-0 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.06] transition-all"
           disabled={loading}
         />
         <button
           type="submit"
           disabled={!url.trim() || loading}
-          className="px-3 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+          className="px-3 py-2 bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/20 hover:border-violet-500/40 disabled:opacity-40 text-violet-300 rounded-lg text-xs font-medium transition-all whitespace-nowrap"
         >
-          {loading ? '…' : 'Extract'}
+          {loading ? (
+            <span className="animate-spin h-3 w-3 border-[1.5px] border-violet-400/30 border-t-violet-400 rounded-full inline-block" />
+          ) : (
+            'Extract'
+          )}
         </button>
       </form>
 
       {error && (
-        <p className="text-xs text-red-400">{error}</p>
+        <p className="text-xs text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-3 py-2">
+          {error}
+        </p>
       )}
 
       {brand && Array.isArray(brand.colors) && (
-        <div className="bg-slate-800/50 rounded-lg p-3 text-xs space-y-2">
-          <div>
-            <span className="text-slate-500">Colors: </span>
-            <span className="flex flex-wrap gap-1 mt-1">
-              {brand.colors.slice(0, 10).map((c, i) => (
-                <span key={i} className="inline-flex items-center gap-1">
-                  <span className="w-3 h-3 rounded-sm border border-slate-700 inline-block" style={{ background: c }} />
-                  <span className="text-slate-400">{c}</span>
-                </span>
-              ))}
-            </span>
+        <div className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3 space-y-2.5">
+          <div className="flex flex-wrap gap-1">
+            {brand.colors.slice(0, 12).map((c, i) => (
+              <span
+                key={i}
+                title={c}
+                className="w-5 h-5 rounded-md border border-black/20 flex-shrink-0 shadow-sm"
+                style={{ background: c }}
+              />
+            ))}
           </div>
           {brand.fontFamilies.length > 0 && (
-            <div>
-              <span className="text-slate-500">Fonts: </span>
-              <span className="text-slate-300">{brand.fontFamilies.slice(0, 3).join(', ')}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-slate-600 font-medium">Fonts:</span>
+              <span className="text-[10px] text-slate-400">{brand.fontFamilies.slice(0, 3).join(', ')}</span>
             </div>
           )}
-          <p className="text-green-400">✓ Brand context ready — will be used in next generation</p>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+            <span className="text-[10px] text-emerald-400 font-medium">Active — used in next generation</span>
+          </div>
         </div>
       )}
     </div>

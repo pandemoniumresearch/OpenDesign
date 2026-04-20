@@ -44,33 +44,45 @@ export function PromptPanel({ projectId, provider, brandContext, onGenerate }: P
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <label className="text-xs font-medium text-slate-400 uppercase tracking-wider">Prompt</label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
       <textarea
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder="Describe what you want to design…&#10;e.g. A dark hero section with animated gradient background and a CTA button"
-        rows={6}
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-500 resize-none focus:outline-none focus:border-indigo-500 transition-colors"
+        placeholder={'Describe what to design…\ne.g. A dark hero section with animated gradient and CTA button'}
+        rows={5}
+        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:border-indigo-500/50 focus:bg-white/[0.06] transition-all leading-relaxed"
         disabled={loading}
       />
       {error && (
-        <p className="text-xs text-red-400 bg-red-950/40 border border-red-800 rounded px-3 py-2">
+        <p className="text-xs text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-3 py-2 leading-relaxed">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={!prompt.trim() || loading}
-        className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-medium text-sm transition-colors"
+        className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
       >
         {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full" />
+          <>
+            <span className="animate-spin h-3 w-3 border-[1.5px] border-white/30 border-t-white rounded-full" />
             Generating…
-          </span>
-        ) : 'Generate'}
+          </>
+        ) : (
+          <>
+            <SparkleIcon />
+            Generate
+          </>
+        )}
       </button>
     </form>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+      <path d="M5.5 1L6.5 4H9.5L7 5.8L8 8.5L5.5 6.8L3 8.5L4 5.8L1.5 4H4.5L5.5 1Z" fill="currentColor" />
+    </svg>
   );
 }
