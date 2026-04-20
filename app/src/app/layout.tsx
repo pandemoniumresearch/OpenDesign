@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-        <body className="min-h-full flex flex-col bg-slate-950">{children}</body>
+      <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+        <body className="min-h-full flex flex-col bg-[#0d0d12] text-slate-100">{children}</body>
       </html>
     </ClerkProvider>
   );
