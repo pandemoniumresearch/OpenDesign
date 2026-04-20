@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
@@ -10,8 +11,16 @@ export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: projects } = await supabase
     .from('projects')
-    .select('id, name, created_at')
-    .order('created_at', { ascending: false });
+    .select('id, name, updated_at')
+    .order('updated_at', { ascending: false });
+
+  async function deleteProject(formData: FormData) {
+    'use server';
+    const projectId = formData.get('projectId') as string;
+    const supabase = await createClient();
+    await supabase.from('projects').delete().eq('id', projectId);
+    revalidatePath('/');
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-8">
@@ -27,13 +36,31 @@ export default async function DashboardPage() {
         {projects && projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects.map((project) => (
-              <Link key={project.id} href={`/app/${project.id}`}
-                className="block p-5 bg-slate-900 border border-slate-800 rounded-xl hover:border-indigo-500 transition-colors">
-                <h2 className="font-semibold text-white truncate">{project.name}</h2>
-                <p className="text-slate-500 text-sm mt-1">
-                  {new Date(project.created_at).toLocaleDateString()}
-                </p>
-              </Link>
+              <div key={project.id} className="relative group">
+                <Link href={`/app/${project.id}`}
+                  className="block p-5 bg-slate-900 border border-slate-800 rounded-xl hover:border-indigo-500 transition-colors">
+                  <h2 className="font-semibold text-white truncate pr-6">{project.name}</h2>
+                  <p className="text-slate-500 text-sm mt-1">
+                    {new Date(project.updated_at).toLocaleDateString(undefined, {
+                      month: 'short', day: 'numeric', year: 'numeric',
+                    })}
+                  </p>
+                </Link>
+                <form action={deleteProject}
+                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <input type="hidden" name="projectId" value={project.id} />
+                  <button
+                    type="submit"
+                    title="Delete project"
+                    className="w-6 h-6 flex items-center justify-center rounded text-slate-500 hover:text-red-400 hover:bg-slate-800 transition-colors text-xs"
+                    onClick={(e) => {
+                      if (!confirm(`Delete "${project.name}"? This cannot be undone.`)) e.preventDefault();
+                    }}
+                  >
+                    ✕
+                  </button>
+                </form>
+              </div>
             ))}
           </div>
         ) : (
