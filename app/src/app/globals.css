@@ -1,46 +1,69 @@
 @import "tailwindcss";
 
-/* ── Theme variables ──────────────────────────────────────────────── */
+/* ── Watercolor tokens ──────────────────────────────────────────────── */
 
-/* Pastel (default) */
 :root {
-  --background: #f4f2ff;
-  --foreground: #2d2a4a;
+  /* Paper — warm off-white */
+  --paper:   #fdfcfa;
+  --paper-2: #f7f4ee;
 
-  --bg-page:   #f4f2ff;
-  --bg-panel:  #edeaff;
-  --bg-canvas: #e7e3ff;
-  --bg-card:   #f0edff;
-  --bg-input:  #ebe8ff;
-  --bg-hover:  #e5e0ff;
+  /* Ink */
+  --ink:   #2a2438;
+  --ink-2: #4a4560;
+  --ink-3: #7a7590;
+  --ink-4: #a8a3b8;
+  --ink-5: #c9c4d4;
 
-  --bd-1: #d0cbe8;
-  --bd-2: #c4bee0;
+  /* Rules */
+  --rule:   #ece8e0;
+  --rule-2: #d8d4cc;
 
-  --t1: #2d2a4a;
-  --t2: #4d4a6a;
-  --t3: #6b6890;
-  --t4: #9d9ab8;
-  --t5: #b8b5d0;
+  /* Watercolor pigments */
+  --pigment-lavender: oklch(82% 0.09 295);
+  --pigment-peach:    oklch(86% 0.08 45);
+  --pigment-mint:     oklch(88% 0.08 165);
+  --pigment-butter:   oklch(92% 0.09 90);
+  --pigment-sky:      oklch(86% 0.07 230);
+  --pigment-rose:     oklch(85% 0.08 10);
 
-  --ac:   #7c6fcd;
-  --ac-h: #9d91e3;
-  --ac-a: #6b5ec7;
-  --ac2:  #9d91e3;
+  /* Accent — lavender ink */
+  --ac:      #7a68c8;
+  --ac-soft: #b5a8e6;
+  --ac-bg:   #efeafd;
+
+  /* Legacy aliases used throughout the codebase */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --bg-page:   var(--paper);
+  --bg-panel:  var(--paper-2);
+  --bg-canvas: var(--paper-2);
+  --bg-card:   var(--paper);
+  --bg-input:  var(--paper-2);
+  --bg-hover:  rgba(42, 36, 56, 0.04);
+  --bd-1: var(--rule);
+  --bd-2: var(--rule-2);
+  --t1: var(--ink);
+  --t2: var(--ink-2);
+  --t3: var(--ink-3);
+  --t4: var(--ink-4);
+  --t5: var(--ink-5);
+  --ac-h: var(--ac-soft);
+  --ac-a: #6a58b8;
+  --ac2:  var(--ac-soft);
   --ac3:  #3daa78;
   --sky:  #3b9bbf;
   --rose: #c45070;
   --amb:  #b8882a;
 
   /* Pre-computed opacity fills */
-  --ac-04:   rgba(124, 111, 205, 0.04);
-  --ac-06:   rgba(124, 111, 205, 0.06);
-  --ac-08:   rgba(124, 111, 205, 0.08);
-  --ac-15:   rgba(124, 111, 205, 0.15);
-  --ac-20:   rgba(124, 111, 205, 0.20);
-  --ac-25:   rgba(124, 111, 205, 0.25);
-  --ac2-04:  rgba(157, 145, 227, 0.04);
-  --ac2-15:  rgba(157, 145, 227, 0.15);
+  --ac-04:   rgba(122, 104, 200, 0.04);
+  --ac-06:   rgba(122, 104, 200, 0.06);
+  --ac-08:   rgba(122, 104, 200, 0.08);
+  --ac-15:   rgba(122, 104, 200, 0.15);
+  --ac-20:   rgba(122, 104, 200, 0.20);
+  --ac-25:   rgba(122, 104, 200, 0.25);
+  --ac2-04:  rgba(181, 168, 230, 0.04);
+  --ac2-15:  rgba(181, 168, 230, 0.15);
   --ac3-04:  rgba(61,  170, 120, 0.04);
   --ac3-15:  rgba(61,  170, 120, 0.15);
   --sky-15:  rgba(59,  155, 191, 0.15);
@@ -48,15 +71,15 @@
   --amb-15:  rgba(184, 136,  42, 0.15);
 
   /* Pre-computed opacity borders */
-  --ac-bd-15: rgba(124, 111, 205, 0.15);
-  --ac-bd-20: rgba(124, 111, 205, 0.20);
-  --ac-bd-25: rgba(124, 111, 205, 0.25);
-  --ac-bd-30: rgba(124, 111, 205, 0.30);
-  --ac-bd-40: rgba(124, 111, 205, 0.40);
-  --ac-bd-55: rgba(124, 111, 205, 0.55);
-  --ac2-bd-20: rgba(157, 145, 227, 0.20);
-  --ac2-bd-25: rgba(157, 145, 227, 0.25);
-  --ac2-bd-40: rgba(157, 145, 227, 0.40);
+  --ac-bd-15: rgba(122, 104, 200, 0.15);
+  --ac-bd-20: rgba(122, 104, 200, 0.20);
+  --ac-bd-25: rgba(122, 104, 200, 0.25);
+  --ac-bd-30: rgba(122, 104, 200, 0.30);
+  --ac-bd-40: rgba(122, 104, 200, 0.40);
+  --ac-bd-55: rgba(122, 104, 200, 0.55);
+  --ac2-bd-20: rgba(181, 168, 230, 0.20);
+  --ac2-bd-25: rgba(181, 168, 230, 0.25);
+  --ac2-bd-40: rgba(181, 168, 230, 0.40);
   --ac3-bd-20: rgba(61,  170, 120, 0.20);
 
   --err:    #d95e6a;
@@ -64,74 +87,92 @@
   --err-bd: rgba(217, 94, 106, 0.25);
   --ok:     #3daa78;
 
-  /* Canvas decorations */
-  --dot:      rgba(124, 111, 205, 0.18);
-  --vignette: #e7e3ff;
+  --dot:      rgba(42, 36, 56, 0.06);
+  --vignette: var(--paper-2);
 
-  /* Thumbnail gradients (6 cycling) */
-  --thumb-1: linear-gradient(135deg, #a89de8 0%, #c5b0f5 100%);
-  --thumb-2: linear-gradient(135deg, #8dd0f5 0%, #a89de8 100%);
-  --thumb-3: linear-gradient(135deg, #80d8b8 0%, #8dd0f5 100%);
-  --thumb-4: linear-gradient(135deg, #fcd880 0%, #f8a0a8 100%);
-  --thumb-5: linear-gradient(135deg, #f5a8d0 0%, #c0a8f8 100%);
-  --thumb-6: linear-gradient(135deg, #7dd8d0 0%, #a89de8 100%);
+  /* Thumbnail gradients — watercolor pastel */
+  --thumb-1: linear-gradient(135deg, #c4b8f0 0%, #f0c8d4 100%);
+  --thumb-2: linear-gradient(135deg, #b8e8d4 0%, #c4b8f0 100%);
+  --thumb-3: linear-gradient(135deg, #c8e8f0 0%, #b8e4d4 100%);
+  --thumb-4: linear-gradient(135deg, #f8ecc0 0%, #f4d0a8 100%);
+  --thumb-5: linear-gradient(135deg, #f4c8e0 0%, #c8b8f4 100%);
+  --thumb-6: linear-gradient(135deg, #c8e4f8 0%, #f8ecc0 100%);
 
-  --shadow-ac: rgba(124, 111, 205, 0.10);
+  --shadow-soft: 0 1px 2px rgba(42, 36, 56, 0.04), 0 8px 28px rgba(42, 36, 56, 0.05);
+  --shadow-card: 0 1px 2px rgba(42, 36, 56, 0.03), 0 24px 60px -20px rgba(122, 104, 200, 0.18);
+  --shadow-ac:   rgba(122, 104, 200, 0.10);
 }
 
-/* Dark theme */
 [data-theme="dark"] {
-  --background: #0d0d12;
-  --foreground: #f1f5f9;
+  --paper:   #0f0e16;
+  --paper-2: #15141e;
 
-  --bg-page:   #0d0d12;
-  --bg-panel:  #111118;
-  --bg-canvas: #09090e;
+  --ink:   #f1ecff;
+  --ink-2: #cfc8e6;
+  --ink-3: #8f89a8;
+  --ink-4: #605a78;
+  --ink-5: #3a3650;
+
+  --rule:   rgba(255, 255, 255, 0.06);
+  --rule-2: rgba(255, 255, 255, 0.11);
+
+  --pigment-lavender: oklch(72% 0.14 295);
+  --pigment-peach:    oklch(76% 0.13 45);
+  --pigment-mint:     oklch(78% 0.13 165);
+  --pigment-butter:   oklch(82% 0.14 90);
+  --pigment-sky:      oklch(75% 0.13 230);
+  --pigment-rose:     oklch(74% 0.14 10);
+
+  --ac:      #b5a8e6;
+  --ac-soft: #7a68c8;
+  --ac-bg:   rgba(181, 168, 230, 0.12);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --bg-page:   var(--paper);
+  --bg-panel:  var(--paper-2);
+  --bg-canvas: var(--paper-2);
   --bg-card:   rgba(255, 255, 255, 0.03);
   --bg-input:  rgba(255, 255, 255, 0.04);
   --bg-hover:  rgba(255, 255, 255, 0.06);
-
-  --bd-1: rgba(255, 255, 255, 0.06);
-  --bd-2: rgba(255, 255, 255, 0.10);
-
-  --t1: #f1f5f9;
-  --t2: #e2e8f0;
-  --t3: #94a3b8;
-  --t4: #64748b;
-  --t5: #475569;
-
-  --ac:   #818cf8;
-  --ac-h: #6366f1;
-  --ac-a: #4f46e5;
-  --ac2:  #a78bfa;
+  --bd-1: var(--rule);
+  --bd-2: var(--rule-2);
+  --t1: var(--ink);
+  --t2: var(--ink-2);
+  --t3: var(--ink-3);
+  --t4: var(--ink-4);
+  --t5: var(--ink-5);
+  --ac-h: var(--ac-soft);
+  --ac-a: #9888d4;
+  --ac2:  #cfc8e6;
   --ac3:  #34d399;
   --sky:  #38bdf8;
   --rose: #fb7185;
   --amb:  #fbbf24;
 
-  --ac-04:   rgba(99, 102, 241, 0.04);
-  --ac-06:   rgba(99, 102, 241, 0.06);
-  --ac-08:   rgba(99, 102, 241, 0.08);
-  --ac-15:   rgba(99, 102, 241, 0.15);
-  --ac-20:   rgba(99, 102, 241, 0.20);
-  --ac-25:   rgba(99, 102, 241, 0.25);
-  --ac2-04:  rgba(167, 139, 250, 0.04);
-  --ac2-15:  rgba(167, 139, 250, 0.15);
+  --ac-04:   rgba(181, 168, 230, 0.04);
+  --ac-06:   rgba(181, 168, 230, 0.06);
+  --ac-08:   rgba(181, 168, 230, 0.08);
+  --ac-15:   rgba(181, 168, 230, 0.15);
+  --ac-20:   rgba(181, 168, 230, 0.20);
+  --ac-25:   rgba(181, 168, 230, 0.25);
+  --ac2-04:  rgba(207, 200, 230, 0.04);
+  --ac2-15:  rgba(207, 200, 230, 0.15);
   --ac3-04:  rgba(52,  211, 153, 0.04);
   --ac3-15:  rgba(52,  211, 153, 0.15);
   --sky-15:  rgba(56,  189, 248, 0.15);
   --rose-15: rgba(251, 113, 133, 0.15);
   --amb-15:  rgba(251, 191,  36, 0.15);
 
-  --ac-bd-15: rgba(99, 102, 241, 0.15);
-  --ac-bd-20: rgba(99, 102, 241, 0.20);
-  --ac-bd-25: rgba(99, 102, 241, 0.25);
-  --ac-bd-30: rgba(99, 102, 241, 0.30);
-  --ac-bd-40: rgba(99, 102, 241, 0.40);
-  --ac-bd-55: rgba(99, 102, 241, 0.55);
-  --ac2-bd-20: rgba(167, 139, 250, 0.20);
-  --ac2-bd-25: rgba(167, 139, 250, 0.25);
-  --ac2-bd-40: rgba(167, 139, 250, 0.40);
+  --ac-bd-15: rgba(181, 168, 230, 0.15);
+  --ac-bd-20: rgba(181, 168, 230, 0.20);
+  --ac-bd-25: rgba(181, 168, 230, 0.25);
+  --ac-bd-30: rgba(181, 168, 230, 0.30);
+  --ac-bd-40: rgba(181, 168, 230, 0.40);
+  --ac-bd-55: rgba(181, 168, 230, 0.55);
+  --ac2-bd-20: rgba(207, 200, 230, 0.20);
+  --ac2-bd-25: rgba(207, 200, 230, 0.25);
+  --ac2-bd-40: rgba(207, 200, 230, 0.40);
   --ac3-bd-20: rgba(52,  211, 153, 0.20);
 
   --err:    #f87171;
@@ -139,24 +180,31 @@
   --err-bd: rgba(153, 27, 27, 0.40);
   --ok:     #34d399;
 
-  --dot:      rgba(99, 102, 241, 0.25);
-  --vignette: #09090e;
+  --dot:      rgba(181, 168, 230, 0.18);
+  --vignette: var(--paper-2);
 
-  --thumb-1: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  --thumb-2: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
-  --thumb-3: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
-  --thumb-4: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-  --thumb-5: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  --thumb-6: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
+  --thumb-1: linear-gradient(135deg, #5a4ec8 0%, #8040a0 100%);
+  --thumb-2: linear-gradient(135deg, #208868 0%, #5a4ec8 100%);
+  --thumb-3: linear-gradient(135deg, #1878a8 0%, #208868 100%);
+  --thumb-4: linear-gradient(135deg, #a87820 0%, #a83030 100%);
+  --thumb-5: linear-gradient(135deg, #a02868 0%, #5048a8 100%);
+  --thumb-6: linear-gradient(135deg, #1098a8 0%, #a87820 100%);
 
-  --shadow-ac: rgba(79, 70, 229, 0.35);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 60px -20px rgba(181, 168, 230, 0.25);
+  --shadow-ac:   rgba(181, 168, 230, 0.20);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:  var(--font-geist-sans);
+  --font-mono:  var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
+}
+
+html, body {
+  transition: background 300ms ease;
 }
 
 body {
@@ -165,4 +213,111 @@ body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.serif {
+  font-family: var(--font-instrument-serif), 'Times New Roman', serif;
+}
+
+/* Watercolor blend mode helpers */
+.splash {
+  mix-blend-mode: multiply;
+}
+[data-theme="dark"] .splash {
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+/* Dark-mode-aware primary button — light: ink bg, dark: accent bg */
+.btn-wc-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  border: 0;
+  cursor: pointer;
+}
+[data-theme="dark"] .btn-wc-primary {
+  background: var(--ac);
+  color: #0f0e16;
+}
+.btn-wc-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(42, 36, 56, 0.15);
+}
+[data-theme="dark"] .btn-wc-primary:hover {
+  box-shadow: 0 8px 28px rgba(181, 168, 230, 0.3);
+}
+
+/* Dark-mode-aware active tab / filled chip */
+.tab-wc-active {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+[data-theme="dark"] .tab-wc-active {
+  background: var(--ac);
+  color: #0f0e16;
+}
+
+/* Dark-mode-aware generate / solid action button */
+.gen-btn-wc {
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-theme="dark"] .gen-btn-wc {
+  background: var(--ac);
+  color: #0f0e16;
+}
+
+/* Hero italic em — gradient adapts to theme */
+.hero-em {
+  font-style: italic;
+  background: linear-gradient(110deg, var(--ac) 0%, #e07a9a 50%, #f0b070 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: 0 6px;
+}
+[data-theme="dark"] .hero-em {
+  background: linear-gradient(110deg, var(--pigment-lavender) 0%, var(--pigment-rose) 55%, var(--pigment-peach) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Paper grain overlay via ::before on elements with this class */
+.grain-stage {
+  position: relative;
+  overflow: hidden;
+}
+.grain-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(42, 36, 56, 0.025) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+[data-theme="dark"] .grain-stage::before {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  mix-blend-mode: screen;
+  opacity: 0.4;
 }
