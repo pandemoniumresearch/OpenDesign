@@ -60,7 +60,7 @@ export default async function DashboardPage() {
             <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--ink)' }}>Design</span>
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <a href="#" style={{ fontSize: 13, color: 'var(--ink-3)', padding: '8px 14px', textDecoration: 'none', borderRadius: 999, fontWeight: 500 }}>Docs</a>
+            <Link href="/settings" style={{ fontSize: 13, color: 'var(--ink-3)', padding: '8px 14px', textDecoration: 'none', borderRadius: 999, fontWeight: 500 }}>Settings</Link>
             <ThemeToggle />
             <NewProjectButton userId={userId} />
             <UserButton />
@@ -85,15 +85,8 @@ export default async function DashboardPage() {
                 <div key={project.id} className="group" style={{ position: 'relative' }}>
                   <Link
                     href={`/app/${project.id}`}
-                    style={{ textDecoration: 'none', display: 'block', background: 'var(--paper)', border: '1px solid var(--rule)', borderRadius: 18, overflow: 'hidden', transition: 'transform 200ms ease, box-shadow 200ms ease', cursor: 'pointer' }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-3px)';
-                      (e.currentTarget as HTMLAnchorElement).style.boxShadow = 'var(--shadow-card)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLAnchorElement).style.transform = '';
-                      (e.currentTarget as HTMLAnchorElement).style.boxShadow = '';
-                    }}
+                    className="project-card-link"
+                    style={{ textDecoration: 'none', display: 'block', background: 'var(--paper)', border: '1px solid var(--rule)', borderRadius: 18, overflow: 'hidden', cursor: 'pointer' }}
                   >
                     {/* Watercolor thumbnail */}
                     <div style={{ height: 150, position: 'relative', overflow: 'hidden' }}>
@@ -173,17 +166,8 @@ function NewProjectCardButton({ userId }: { userId: string }) {
     <form action={createProject} style={{ display: 'contents' }}>
       <button
         type="submit"
-        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 236, border: '1.5px dashed var(--rule-2)', borderRadius: 18, color: 'var(--ink-3)', gap: 10, background: 'transparent', width: '100%', cursor: 'pointer', transition: 'all 200ms ease' }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ac)';
-          (e.currentTarget as HTMLButtonElement).style.color = 'var(--ac)';
-          (e.currentTarget as HTMLButtonElement).style.background = 'var(--ac-bg)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--rule-2)';
-          (e.currentTarget as HTMLButtonElement).style.color = 'var(--ink-3)';
-          (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-        }}
+        className="new-project-card-btn"
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 236, border: '1.5px dashed var(--rule-2)', borderRadius: 18, color: 'var(--ink-3)', gap: 10, background: 'transparent', width: '100%', cursor: 'pointer' }}
       >
         <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--ac-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ac)', fontSize: 22, fontWeight: 300 }}>+</div>
         <div className="serif" style={{ fontStyle: 'italic', fontSize: 20 }}>Start something new</div>
