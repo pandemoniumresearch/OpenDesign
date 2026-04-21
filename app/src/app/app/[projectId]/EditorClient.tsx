@@ -45,86 +45,135 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
   }
 
   return (
-    <div className="h-screen flex flex-col" style={{ background: 'var(--bg-page)', color: 'var(--t1)' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--paper)', color: 'var(--ink)' }}>
       {/* Top bar */}
-      <header className="flex items-center gap-3 px-4 h-11 border-b shrink-0" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
+      <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 18px', height: 52, borderBottom: '1px solid var(--rule)', background: 'var(--paper)', backdropFilter: 'blur(10px)', position: 'relative', zIndex: 5, flexShrink: 0 }}>
         <a
           href="/dashboard"
-          className="flex items-center gap-1.5 transition-colors shrink-0 group"
-          style={{ color: 'var(--t4)' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--ink-3)', fontSize: 12.5, textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}
         >
-          <ChevronLeftIcon />
-          <span className="text-xs font-medium">Projects</span>
+          ← Projects
         </a>
-        <div className="w-px h-4 shrink-0" style={{ background: 'var(--bd-2)' }} />
+        <div style={{ width: 1, height: 18, background: 'var(--rule-2)', flexShrink: 0 }} />
         <input
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          className="flex-1 min-w-0 text-sm font-medium bg-transparent focus:outline-none truncate transition-colors"
-          style={{ color: 'var(--t2)' }}
+          className="serif"
+          style={{ flex: 1, minWidth: 0, fontSize: 19, fontStyle: 'italic', fontWeight: 400, background: 'transparent', border: 'none', outline: 'none', color: 'var(--ink)', letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
           placeholder="Untitled Project"
           aria-label="Project name"
         />
-        <div className="ml-auto flex items-center gap-2 shrink-0">
-          <ProviderSelector value={provider} onChange={setProvider} compact />
-          <div className="w-px h-4" style={{ background: 'var(--bd-2)' }} />
+        <div style={{ width: 1, height: 18, background: 'var(--rule-2)', flexShrink: 0 }} />
+        <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--ink-4)', flexShrink: 0 }}>SAVED · 2m</span>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          {/* Provider indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 12px 5px 8px', borderRadius: 999, border: '1px solid var(--rule-2)', fontSize: 12, color: 'var(--ink-2)' }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--pigment-mint)', display: 'inline-block' }} />
+            <ProviderSelector value={provider} onChange={setProvider} compact />
+          </div>
+          <div style={{ width: 1, height: 18, background: 'var(--rule-2)' }} />
           <ThemeToggle />
           <LogoMark />
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left: Artifacts panel */}
-        <aside className="w-[196px] shrink-0 flex flex-col border-r overflow-hidden" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
-          <SectionHeader label="Artifacts" />
-          <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pb-3">
-            <HistoryPanel projectId={projectId} onLoad={handleGenerated} />
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '220px 1fr 320px', overflow: 'hidden' }}>
+        {/* Left: Artifacts */}
+        <aside style={{ borderRight: '1px solid var(--rule)', padding: '18px 14px', overflow: 'auto', background: 'var(--paper)' }}>
+          <EdSectionHead label="Artifacts" action="+" />
+          <HistoryPanel projectId={projectId} onLoad={handleGenerated} />
+
+          <div style={{ marginTop: 28 }}>
+            <EdSectionHead label="History" />
           </div>
         </aside>
 
         {/* Center: Canvas */}
-        <main className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--bg-canvas)' }}>
-          <div className="flex items-center px-4 h-10 border-b shrink-0 gap-2" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
-            <CanvasTab active>Prototype</CanvasTab>
-            <div className="ml-auto flex items-center gap-2">
-              {prototype && (
-                <span className="text-[10px] font-mono truncate max-w-[160px]" style={{ color: 'var(--t5)' }}>
-                  {prototype.title}
-                </span>
-              )}
-            </div>
+        <main style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative', background: 'var(--paper-2)' }}>
+          {/* Watercolor background for canvas */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }} aria-hidden="true">
+            <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
+              <g className="splash" filter="url(#watercolor-blur)">
+                <ellipse cx="720" cy="450" rx="420" ry="300" fill="url(#rg-lav)" opacity="0.35" />
+                <ellipse cx="200" cy="300" rx="180" ry="140" fill="url(#rg-peach)" opacity="0.4" />
+                <ellipse cx="1240" cy="700" rx="220" ry="170" fill="url(#rg-mint)" opacity="0.4" />
+              </g>
+            </svg>
           </div>
-          <div className="flex-1 overflow-hidden">
+
+          {/* Tabs */}
+          <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--rule)', display: 'flex', gap: 4, background: 'var(--paper)', position: 'relative', zIndex: 2, flexShrink: 0 }}>
+            <CanvasTab active>⬡ Preview</CanvasTab>
+            <CanvasTab>Code</CanvasTab>
+            <CanvasTab>Tokens</CanvasTab>
+            <div style={{ flex: 1 }} />
+            <CanvasTab>Desktop</CanvasTab>
+            <CanvasTab>Tablet</CanvasTab>
+            <CanvasTab>Mobile</CanvasTab>
+            {prototype && (
+              <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--ink-5)', display: 'flex', alignItems: 'center', paddingLeft: 8 }}>
+                {prototype.title}
+              </span>
+            )}
+          </div>
+
+          {/* Canvas area */}
+          <div style={{ flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
             <CanvasPreview html={fullHtml} />
           </div>
         </main>
 
-        {/* Right: AI Command panel */}
-        <aside className="w-[268px] shrink-0 flex flex-col border-l overflow-y-auto" style={{ borderColor: 'var(--bd-1)', background: 'var(--bg-panel)' }}>
-          <PanelSection icon={<SparkleIcon />} iconBg="var(--ac-15)" label="AI Generation">
+        {/* Right: AI panel */}
+        <aside style={{ borderLeft: '1px solid var(--rule)', padding: '18px 16px', background: 'var(--paper)', overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {/* Describe */}
+          <PanelGroup>
+            <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Describe</h3>
+            <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>Write a prompt — be specific about tone & structure.</p>
             <PromptPanel
               projectId={projectId}
               provider={provider}
               brandContext={brandContext?.brandContextString}
               onGenerate={handleGenerated}
             />
-          </PanelSection>
+          </PanelGroup>
 
           <PanelDivider />
 
-          <PanelSection icon={<TokenIcon />} iconBg="var(--ac2-15)" label="Brand Tokens">
+          {/* Palette / Brand Tokens */}
+          <PanelGroup>
+            <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Palette</h3>
+            <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>Extract tokens from any site URL.</p>
+            {/* Color swatches */}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+              {[
+                { bg: 'var(--pigment-lavender)', sel: true },
+                { bg: 'var(--pigment-peach)',    sel: false },
+                { bg: 'var(--pigment-mint)',     sel: false },
+                { bg: 'var(--pigment-butter)',   sel: false },
+                { bg: 'var(--pigment-sky)',      sel: false },
+                { bg: 'var(--pigment-rose)',     sel: false },
+              ].map((s, i) => (
+                <div
+                  key={i}
+                  style={{ width: 28, height: 28, borderRadius: '50%', background: s.bg, border: '1px solid var(--rule-2)', cursor: 'pointer', position: 'relative', boxShadow: s.sel ? '0 0 0 2.5px var(--paper), 0 0 0 4px var(--ink)' : 'inset 0 1px 2px rgba(0,0,0,0.04)' }}
+                />
+              ))}
+            </div>
             <BrandTokenPanel
               projectId={projectId}
               initialBrandContext={initialBrandContext}
               onIngested={(ctx) => setBrandContext(ctx)}
             />
-          </PanelSection>
+          </PanelGroup>
 
           <PanelDivider />
 
-          <PanelSection icon={<ExportIcon />} iconBg="var(--ac3-15)" label="Export">
+          {/* Export */}
+          <PanelGroup>
+            <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Export</h3>
+            <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>Deterministic output, yours to keep.</p>
             <ExportPanel prototype={prototype} fullHtml={fullHtml} artifactId={artifactId} />
-          </PanelSection>
+          </PanelGroup>
         </aside>
       </div>
     </div>
@@ -133,43 +182,34 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
 
 // ─── Layout primitives ────────────────────────────────────────────────────────
 
-function SectionHeader({ label }: { label: string }) {
+function EdSectionHead({ label, action }: { label: string; action?: string }) {
   return (
-    <div className="px-3 pt-3 pb-2 shrink-0">
-      <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--t4)' }}>{label}</span>
+    <div style={{ fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ink-4)', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+      <span>{label}</span>
+      {action && <span style={{ color: 'var(--ink-4)' }}>{action}</span>}
     </div>
   );
 }
 
-function PanelSection({
-  icon, iconBg, label, children,
-}: {
-  icon: React.ReactNode; iconBg: string; label: string; children: React.ReactNode;
-}) {
+function PanelGroup({ children }: { children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 p-4">
-      <div className="flex items-center gap-2">
-        <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: iconBg }}>
-          {icon}
-        </span>
-        <span className="text-xs font-semibold" style={{ color: 'var(--t1)' }}>{label}</span>
-      </div>
+    <div style={{ paddingTop: 16, marginTop: 2 }}>
       {children}
-    </section>
+    </div>
   );
 }
 
 function PanelDivider() {
-  return <div className="h-px mx-4 shrink-0" style={{ background: 'var(--bd-1)' }} />;
+  return <div style={{ height: 1, background: 'var(--rule)', margin: '14px 0 0' }} />;
 }
 
 function CanvasTab({ children, active }: { children: React.ReactNode; active?: boolean }) {
   return (
     <button
-      className="px-2.5 py-1 rounded text-xs font-medium transition-colors"
+      className={active ? 'tab-wc-active' : undefined}
       style={active
-        ? { background: 'var(--ac-15)', color: 'var(--ac)' }
-        : { color: 'var(--t4)' }
+        ? { fontSize: 12, padding: '6px 12px', borderRadius: 999 }
+        : { fontSize: 12, padding: '6px 12px', borderRadius: 999, color: 'var(--ink-3)', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 500 }
       }
     >
       {children}
@@ -177,46 +217,11 @@ function CanvasTab({ children, active }: { children: React.ReactNode; active?: b
   );
 }
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-function ChevronLeftIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-      <path d="M8 2.5L4.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function SparkleIcon() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <path d="M5 1L5.9 3.6L8.5 3.6L6.4 5.2L7.3 7.8L5 6.2L2.7 7.8L3.6 5.2L1.5 3.6L4.1 3.6L5 1Z" style={{ fill: 'var(--ac)' }} />
-    </svg>
-  );
-}
-
-function TokenIcon() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <circle cx="5" cy="5" r="3.5" style={{ stroke: 'var(--ac2)' }} strokeWidth="1.4" />
-      <circle cx="5" cy="5" r="1.5" style={{ fill: 'var(--ac2)' }} />
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <path d="M5 1.5V6.5M3 4.5L5 6.5L7 4.5M2.5 8.5H7.5" style={{ stroke: 'var(--ac3)' }} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 function LogoMark() {
   return (
-    <span className="text-xs font-bold tracking-tight">
-      <span style={{ color: 'var(--ac)' }}>Open</span>
-      <span style={{ color: 'var(--t4)' }}>Design</span>
+    <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '-0.02em' }}>
+      <span className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 16, color: 'var(--ac)', letterSpacing: '-0.01em' }}>Open</span>
+      Design
     </span>
   );
 }
