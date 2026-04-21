@@ -321,3 +321,20 @@ body {
   mix-blend-mode: screen;
   opacity: 0.4;
 }
+
+.project-card-link {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.project-card-link:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.new-project-card-btn {
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.new-project-card-btn:hover {
+  border-color: var(--ac) !important;
+  color: var(--ac) !important;
+  background: var(--ac-bg) !important;
+}
