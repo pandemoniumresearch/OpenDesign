@@ -56,7 +56,7 @@ export function PromptPanel({ projectId, provider, brandContext, onGenerate, cur
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
-      {/* Refine toggle — only shown when a prototype exists */}
+      {/* Refine toggle - only shown when a prototype exists */}
       {isRefineAvailable && (
         <div
           className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer select-none"

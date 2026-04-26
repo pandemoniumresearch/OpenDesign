@@ -28,7 +28,7 @@ function figmaColorToHex(r: number, g: number, b: number): string {
 
 function extractFileKey(url: string): string {
   const match = url.match(/figma\.com\/(?:file|design)\/([a-zA-Z0-9]+)/);
-  if (!match) throw new Error('Invalid Figma URL — expected https://www.figma.com/file/... or /design/...');
+  if (!match) throw new Error('Invalid Figma URL. Expected https://www.figma.com/file/... or /design/...');
   return match[1];
 }
 
@@ -64,7 +64,7 @@ export async function ingestFromFigma(figmaUrl: string, figmaToken: string): Pro
 
   if (!res.ok) {
     if (res.status === 403) throw new Error('Invalid Figma token or file is not accessible to this token');
-    if (res.status === 404) throw new Error('Figma file not found — check the URL and token permissions');
+    if (res.status === 404) throw new Error('Figma file not found. Check the URL and token permissions.');
     throw new Error(`Figma API error: ${res.status}`);
   }
 

@@ -16,7 +16,7 @@ export interface CodeHandoffOptions {
 const FRAMEWORK_INSTRUCTIONS: Record<HandoffFramework, string> = {
   react: `Convert the HTML/CSS/JS into a single self-contained React functional component written in TypeScript.
 - Use "import React from 'react';" at the top.
-- Inline the CSS as a <style> tag string injected via dangerouslySetInnerHTML on a style element OR use a styled JSX approach — whichever is cleaner.
+- Inline the CSS as a <style> tag string injected via dangerouslySetInnerHTML on a style element OR use a styled JSX approach, whichever is cleaner.
 - Convert JS event handlers to React event handler props (onClick, onMouseEnter, etc.) when straightforward. Leave complex imperative DOM logic in a useEffect.
 - Export the component as "export default function ComponentName()".
 - The output must be a single .tsx file, nothing else. No markdown fences.`,

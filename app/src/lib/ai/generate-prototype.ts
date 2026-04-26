@@ -2,11 +2,11 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import { getModel, type Provider, type UserApiKeys } from './providers';
 
-// Flat schema — avoids anyOf/discriminated unions that Gemini rejects
+// Flat schema - avoids anyOf/discriminated unions that Gemini rejects
 export const PrototypeSchema = z.object({
   title: z.string().describe('Short descriptive name for this prototype'),
   html: z.string().describe('Complete HTML body content (fragment, no <html>/<head> wrapper)'),
-  css: z.string().describe('CSS styles — scoped or with unique class names to avoid collisions'),
+  css: z.string().describe('CSS styles - scoped or with unique class names to avoid collisions'),
   js: z.string().describe('JavaScript for interactivity. Empty string if none needed.'),
   colorPrimary: z.string().describe('Primary color used in hex format e.g. #6366f1'),
   colorBackground: z.string().describe('Background color in hex format e.g. #0f172a'),
@@ -33,7 +33,7 @@ Make designs dark-themed, modern, and visually impressive by default.`;
 
 const REFINE_SYSTEM_PROMPT = `You are an expert frontend developer refining an existing UI prototype.
 You will receive the current HTML, CSS, and JS along with a modification instruction.
-Apply ONLY the requested changes while preserving everything else — layout, colors, fonts, animations.
+Apply ONLY the requested changes while preserving everything else - layout, colors, fonts, animations.
 Return the complete updated code, not just the diff.
 CSS should use the same "od-" prefixed class names that already exist.`;
 

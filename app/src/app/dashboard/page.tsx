@@ -120,7 +120,7 @@ export default async function DashboardPage() {
           {/* Empty state */}
           {(!projects || projects.length === 0) && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', textAlign: 'center' }}>
-              <p style={{ fontSize: 14, color: 'var(--ink-4)', marginBottom: 24, fontFamily: 'var(--font-geist-mono)' }}>No projects yet — create your first prototype above.</p>
+              <p style={{ fontSize: 14, color: 'var(--ink-4)', marginBottom: 24, fontFamily: 'var(--font-geist-mono)' }}>No projects yet. Create your first prototype above.</p>
             </div>
           )}
         </main>

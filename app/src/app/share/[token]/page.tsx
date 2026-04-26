@@ -70,5 +70,5 @@ export async function generateMetadata({ params }: Params) {
     .single();
 
   const title = artifact ? ((artifact.document as Record<string, unknown>).title as string | undefined) ?? 'Shared design' : 'Not found';
-  return { title: `${title} — OpenDesign` };
+  return { title: `${title} | OpenDesign` };
 }

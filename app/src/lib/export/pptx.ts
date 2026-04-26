@@ -5,7 +5,7 @@ function hexNoHash(hex: string): string {
 }
 
 export async function exportPptx(deck: Deck): Promise<Buffer> {
-  // Dynamic import — pptxgenjs is CJS; avoids Edge runtime issues
+  // Dynamic import - pptxgenjs is CJS; avoids Edge runtime issues
   const { default: PptxGenJS } = await import('pptxgenjs');
 
   const pres = new PptxGenJS();

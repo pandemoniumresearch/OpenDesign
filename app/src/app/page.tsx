@@ -71,7 +71,7 @@ export default async function LandingPage() {
           </h1>
 
           <p style={{ fontSize: 18, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 620, margin: '0 auto 40px', fontWeight: 400, letterSpacing: '-0.005em' }}>
-            Generate HTML/CSS/JS prototypes from a prompt, ingest design tokens from any website, and export to HTML, PDF, or MP4 — with any AI model you choose.
+            Generate HTML/CSS/JS prototypes from a prompt, ingest design tokens from any website, and export to HTML, PDF, or MP4. Works with any AI model you choose.
           </p>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 56 }}>
@@ -101,9 +101,9 @@ export default async function LandingPage() {
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
             {[
-              { num: '01 — SOURCE', title: 'Open & yours.', desc: 'Self-host with Docker Compose. Fork it, audit it, own it. No vendor lock-in, no usage caps.', grad: 'rg-lav' },
-              { num: '02 — MODELS', title: 'Any brain you bring.', desc: 'Claude Sonnet, GPT-4o, Gemini Flash, or run Llama locally with Ollama. Switch mid-session.', grad: 'rg-peach' },
-              { num: '03 — EXPORT', title: 'Real video, really.', desc: 'The only tool that exports HTML/CSS/JS animations as actual MP4s — deterministic frame capture, no screen recording.', grad: 'rg-mint' },
+              { num: '01 / SOURCE', title: 'Open & yours.', desc: 'Self-host with Docker Compose. Fork it, audit it, own it. No vendor lock-in, no usage caps.', grad: 'rg-lav' },
+              { num: '02 / MODELS', title: 'Any brain you bring.', desc: 'Claude Sonnet, GPT-4o, Gemini Flash, or run Llama locally with Ollama. Switch mid-session.', grad: 'rg-peach' },
+              { num: '03 / EXPORT', title: 'Real video, really.', desc: 'The only tool that exports HTML/CSS/JS animations as actual MP4s. Deterministic frame capture, no screen recording.', grad: 'rg-mint' },
             ].map((p) => (
               <div key={p.num} style={{ position: 'relative', padding: '32px 28px 28px', borderRadius: 20, background: 'var(--paper)', border: '1px solid var(--rule)', overflow: 'hidden' }}>
                 <svg style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, pointerEvents: 'none', opacity: 0.75 }} viewBox="0 0 200 200">
@@ -125,7 +125,7 @@ export default async function LandingPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
             {[
               { step: '01', title: 'Describe.', desc: 'Write a prompt. OpenDesign generates a complete HTML/CSS/JS prototype in seconds.' },
-              { step: '02', title: 'Customize.', desc: 'Paste any website URL to extract its design tokens — colors, fonts, spacing — and apply them to every generation.' },
+              { step: '02', title: 'Customize.', desc: 'Paste any website URL to extract its design tokens (colors, fonts, spacing) and apply them to every generation.' },
               { step: '03', title: 'Export.', desc: 'Download a static HTML bundle, a selectable PDF, or a real MP4 video of your animated prototype.' },
             ].map((s) => (
               <div key={s.step}>

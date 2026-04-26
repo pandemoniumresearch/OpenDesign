@@ -292,7 +292,7 @@ export function SettingsClient({ initialStatus }: Props) {
         lineHeight: 1.6,
       }}>
         <strong style={{ color: 'var(--ink-3)', display: 'block', marginBottom: 4 }}>Ollama (local)</strong>
-        No key required. Runs on your own machine — configure the endpoint in your environment variables.
+        No key required. Runs on your own machine. Configure the endpoint in your environment variables.
       </div>
     </div>
   );

@@ -125,7 +125,7 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
             type="password"
             value={figmaToken}
             onChange={(e) => setFigmaToken(e.target.value)}
-            placeholder="Figma token (figd_…) — or save in Settings"
+            placeholder="Figma token (figd_…) or save in Settings"
             className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
             style={{
               background: 'var(--bg-input)',
@@ -174,7 +174,7 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
           )}
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--ok)' }} />
-            <span className="text-[10px] font-medium" style={{ color: 'var(--ok)' }}>Active — used in next generation</span>
+            <span className="text-[10px] font-medium" style={{ color: 'var(--ok)' }}>Active, used in next generation</span>
           </div>
         </div>
       )}

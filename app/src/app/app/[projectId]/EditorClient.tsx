@@ -182,9 +182,9 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
           <PanelGroup>
             <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Describe</h3>
             <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>
-              {artifactMode === 'deck' ? 'Describe your presentation — topic, audience, tone.'
+              {artifactMode === 'deck' ? 'Describe your presentation: topic, audience, tone.'
                : artifactMode === 'landing' ? 'Describe your product or service for the landing page.'
-               : 'Write a prompt — be specific about tone & structure.'}
+               : 'Write a prompt. Be specific about tone and structure.'}
             </p>
             {artifactMode === 'deck' ? (
               <DeckPanel

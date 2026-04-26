@@ -15,7 +15,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: 'OpenDesign — Model-agnostic AI design tool',
+  title: 'OpenDesign | Model-agnostic AI design tool',
   description: 'OSS, model-agnostic design tool with real video export',
 };
 

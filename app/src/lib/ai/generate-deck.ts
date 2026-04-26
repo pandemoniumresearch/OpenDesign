@@ -2,7 +2,7 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import { getModel, type Provider, type UserApiKeys } from './providers';
 
-// Flat schema — avoids anyOf/discriminated unions that Gemini rejects
+// Flat schema - avoids anyOf/discriminated unions that Gemini rejects
 export const SlideSchema = z.object({
   title: z.string().describe('Slide title (under 8 words)'),
   bullets: z.array(z.string()).describe('3-5 bullet points, each under 12 words'),
@@ -25,7 +25,7 @@ export type Slide = z.infer<typeof SlideSchema>;
 
 const SYSTEM_PROMPT = `You are an expert presentation designer. Generate professional, concise slide decks.
 Each slide should have a clear title and 3-5 focused bullet points (under 12 words each).
-Design with modern, clean aesthetics — dark themes by default.
+Design with modern, clean aesthetics. Dark themes by default.
 Speaker notes should add context not visible on the slide.
 First slide must be layout "title-slide", last must be "closing".`;
 

@@ -32,7 +32,7 @@ export function ProviderSelector({ value, onChange, compact = false }: ProviderS
         title="AI model"
       >
         {PROVIDERS.map((p) => (
-          <option key={p.id} value={p.id}>{p.short} — {PROVIDER_MODELS[p.id]}</option>
+          <option key={p.id} value={p.id}>{p.short} /{PROVIDER_MODELS[p.id]}</option>
         ))}
       </select>
     );
@@ -48,7 +48,7 @@ export function ProviderSelector({ value, onChange, compact = false }: ProviderS
         style={selectStyle}
       >
         {PROVIDERS.map((p) => (
-          <option key={p.id} value={p.id}>{p.label} — {PROVIDER_MODELS[p.id]}</option>
+          <option key={p.id} value={p.id}>{p.label} /{PROVIDER_MODELS[p.id]}</option>
         ))}
       </select>
     </div>

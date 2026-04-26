@@ -223,7 +223,7 @@ export function ExportPanel({ prototype, fullHtml, artifactId, deck, landingPage
         </button>
       )}
 
-      {/* Code handoff — prototype only */}
+      {/* Code handoff - prototype only */}
       {!isDeck && prototype && (
         <>
           <div className="pt-1 pb-0.5" style={{ fontSize: 9.5, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--t5)', fontWeight: 600 }}>

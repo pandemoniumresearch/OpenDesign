@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   if (!artifact) return NextResponse.json({ error: 'Artifact not found' }, { status: 404 });
 
-  // @ts-expect-error — Supabase join typing
+  // @ts-expect-error - Supabase join typing
   const ownerUserId = artifact.projects?.user_id as string | undefined;
   if (ownerUserId !== userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -59,7 +59,7 @@ export async function DELETE(req: NextRequest) {
 
   if (!artifact) return NextResponse.json({ error: 'Artifact not found' }, { status: 404 });
 
-  // @ts-expect-error — Supabase join typing
+  // @ts-expect-error - Supabase join typing
   if ((artifact.projects?.user_id as string | undefined) !== userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }

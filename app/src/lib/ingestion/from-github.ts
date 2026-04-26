@@ -66,7 +66,7 @@ function extractFontSizes(css: string): string[] {
 
 export async function ingestFromGithub(repoUrl: string): Promise<BrandContext> {
   const match = repoUrl.match(/github\.com\/([^/]+)\/([^/#?]+)/);
-  if (!match) throw new Error('Invalid GitHub URL — expected https://github.com/owner/repo');
+  if (!match) throw new Error('Invalid GitHub URL. Expected https://github.com/owner/repo');
 
   const [, owner, repo] = match;
   const apiBase = `https://api.github.com/repos/${owner}/${repo}`;
