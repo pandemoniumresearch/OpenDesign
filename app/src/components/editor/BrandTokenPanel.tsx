@@ -8,7 +8,10 @@ interface BrandTokenPanelProps {
   initialBrandContext?: BrandContext | null;
 }
 
+type SourceTab = 'url' | 'github';
+
 export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: BrandTokenPanelProps) {
+  const [tab, setTab] = useState<SourceTab>('url');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +23,10 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
     setLoading(true);
     setError(null);
 
+    const endpoint = tab === 'github' ? '/api/ingest/github' : '/api/ingest';
+
     try {
-      const res = await fetch('/api/ingest', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, projectId }),
@@ -35,6 +40,7 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
       const { brandContext } = await res.json();
       setBrand(brandContext);
       onIngested(brandContext);
+      setUrl('');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Ingestion failed');
     } finally {
@@ -44,12 +50,29 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
 
   return (
     <div className="flex flex-col gap-2.5">
+      {/* Source tabs */}
+      <div className="flex gap-1 p-0.5 rounded-lg" style={{ background: 'var(--bg-input)', border: '1px solid var(--bd-1)' }}>
+        {(['url', 'github'] as SourceTab[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => { setTab(t); setError(null); }}
+            className="flex-1 py-1 rounded-md text-[10px] font-medium uppercase tracking-wider transition-all"
+            style={tab === t
+              ? { background: 'var(--paper)', color: 'var(--ac)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }
+              : { color: 'var(--t4)', background: 'transparent' }
+            }
+          >
+            {t === 'url' ? 'Site URL' : 'GitHub'}
+          </button>
+        ))}
+      </div>
+
       <form onSubmit={handleIngest} className="flex gap-1.5">
         <input
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://example.com"
+          placeholder={tab === 'github' ? 'https://github.com/owner/repo' : 'https://example.com'}
           className="flex-1 min-w-0 rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
           style={{
             background: 'var(--bg-input)',
@@ -88,22 +111,29 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
         </p>
       )}
 
-      {brand && Array.isArray(brand.colors) && (
+      {brand && (
         <div className="rounded-lg p-3 space-y-2.5" style={{ background: 'var(--bg-card)', border: '1px solid var(--bd-1)' }}>
-          <div className="flex flex-wrap gap-1">
-            {brand.colors.slice(0, 12).map((c, i) => (
-              <span
-                key={i}
-                title={c}
-                className="w-5 h-5 rounded-md flex-shrink-0 shadow-sm"
-                style={{ background: c, border: '1px solid rgba(0,0,0,0.10)' }}
-              />
-            ))}
-          </div>
+          {Array.isArray(brand.colors) && brand.colors.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {brand.colors.slice(0, 12).map((c, i) => (
+                <span
+                  key={i}
+                  title={c}
+                  className="w-5 h-5 rounded-md flex-shrink-0 shadow-sm"
+                  style={{ background: c, border: '1px solid rgba(0,0,0,0.10)' }}
+                />
+              ))}
+            </div>
+          )}
           {brand.fontFamilies.length > 0 && (
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-medium" style={{ color: 'var(--t5)' }}>Fonts:</span>
               <span className="text-[10px]" style={{ color: 'var(--t3)' }}>{brand.fontFamilies.slice(0, 3).join(', ')}</span>
+            </div>
+          )}
+          {brand.sourceUrl && (
+            <div className="text-[10px]" style={{ color: 'var(--t5)', fontFamily: 'var(--font-geist-mono)' }}>
+              {brand.sourceUrl.replace('https://', '')}
             </div>
           )}
           <div className="flex items-center gap-1.5">
