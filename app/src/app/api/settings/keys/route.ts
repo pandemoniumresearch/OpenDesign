@@ -16,7 +16,7 @@ export async function GET() {
   const supabase = await createClient();
   const { data } = await supabase
     .from('user_api_keys')
-    .select('anthropic_key, openai_key, google_key')
+    .select('anthropic_key, openai_key, google_key, figma_key')
     .eq('user_id', userId)
     .single();
 
@@ -34,6 +34,7 @@ export async function GET() {
     anthropic: decode(data?.anthropic_key),
     openai:    decode(data?.openai_key),
     google:    decode(data?.google_key),
+    figma:     decode(data?.figma_key),
   });
 }
 
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
     anthropic?: string | null;
     openai?: string | null;
     google?: string | null;
+    figma?: string | null;
   };
 
   const update: Record<string, string | null> = {};
@@ -53,6 +55,7 @@ export async function POST(req: NextRequest) {
     ['anthropic', 'anthropic_key'],
     ['openai', 'openai_key'],
     ['google', 'google_key'],
+    ['figma', 'figma_key'],
   ] as const) {
     if (field in body) {
       const val = body[field];

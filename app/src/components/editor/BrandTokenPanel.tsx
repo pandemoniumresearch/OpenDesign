@@ -8,11 +8,12 @@ interface BrandTokenPanelProps {
   initialBrandContext?: BrandContext | null;
 }
 
-type SourceTab = 'url' | 'github';
+type SourceTab = 'url' | 'github' | 'figma';
 
 export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: BrandTokenPanelProps) {
   const [tab, setTab] = useState<SourceTab>('url');
   const [url, setUrl] = useState('');
+  const [figmaToken, setFigmaToken] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [brand, setBrand] = useState<BrandContext | null>(initialBrandContext ?? null);
@@ -23,13 +24,21 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
     setLoading(true);
     setError(null);
 
-    const endpoint = tab === 'github' ? '/api/ingest/github' : '/api/ingest';
+    const endpoint =
+      tab === 'github' ? '/api/ingest/github'
+      : tab === 'figma' ? '/api/ingest/figma'
+      : '/api/ingest';
+
+    const body: Record<string, string> = { url: url.trim(), projectId };
+    if (tab === 'figma' && figmaToken.trim()) {
+      body.figmaToken = figmaToken.trim();
+    }
 
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, projectId }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -41,6 +50,7 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
       setBrand(brandContext);
       onIngested(brandContext);
       setUrl('');
+      setFigmaToken('');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Ingestion failed');
     } finally {
@@ -48,11 +58,18 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
     }
   }
 
+  const tabLabels: Record<SourceTab, string> = { url: 'Site URL', github: 'GitHub', figma: 'Figma' };
+
+  const placeholder =
+    tab === 'github' ? 'https://github.com/owner/repo'
+    : tab === 'figma' ? 'https://www.figma.com/file/… or /design/…'
+    : 'https://example.com';
+
   return (
     <div className="flex flex-col gap-2.5">
       {/* Source tabs */}
       <div className="flex gap-1 p-0.5 rounded-lg" style={{ background: 'var(--bg-input)', border: '1px solid var(--bd-1)' }}>
-        {(['url', 'github'] as SourceTab[]).map((t) => (
+        {(Object.keys(tabLabels) as SourceTab[]).map((t) => (
           <button
             key={t}
             onClick={() => { setTab(t); setError(null); }}
@@ -62,44 +79,63 @@ export function BrandTokenPanel({ projectId, onIngested, initialBrandContext }: 
               : { color: 'var(--t4)', background: 'transparent' }
             }
           >
-            {t === 'url' ? 'Site URL' : 'GitHub'}
+            {tabLabels[t]}
           </button>
         ))}
       </div>
 
-      <form onSubmit={handleIngest} className="flex gap-1.5">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder={tab === 'github' ? 'https://github.com/owner/repo' : 'https://example.com'}
-          className="flex-1 min-w-0 rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
-          style={{
-            background: 'var(--bg-input)',
-            border: '1px solid var(--bd-1)',
-            color: 'var(--t1)',
-          }}
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          disabled={!url.trim() || loading}
-          className="px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap disabled:opacity-40"
-          style={{
-            background: 'var(--ac-15)',
-            border: '1px solid var(--ac-bd-25)',
-            color: 'var(--ac)',
-          }}
-        >
-          {loading ? (
-            <span
-              className="animate-spin h-3 w-3 rounded-full inline-block"
-              style={{ border: '1.5px solid var(--ac-bd-25)', borderTopColor: 'var(--ac)' }}
-            />
-          ) : (
-            'Extract'
-          )}
-        </button>
+      <form onSubmit={handleIngest} className="flex flex-col gap-1.5">
+        <div className="flex gap-1.5">
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder={placeholder}
+            className="flex-1 min-w-0 rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
+            style={{
+              background: 'var(--bg-input)',
+              border: '1px solid var(--bd-1)',
+              color: 'var(--t1)',
+            }}
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            disabled={!url.trim() || loading}
+            className="px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap disabled:opacity-40"
+            style={{
+              background: 'var(--ac-15)',
+              border: '1px solid var(--ac-bd-25)',
+              color: 'var(--ac)',
+            }}
+          >
+            {loading ? (
+              <span
+                className="animate-spin h-3 w-3 rounded-full inline-block"
+                style={{ border: '1.5px solid var(--ac-bd-25)', borderTopColor: 'var(--ac)' }}
+              />
+            ) : (
+              'Extract'
+            )}
+          </button>
+        </div>
+
+        {tab === 'figma' && (
+          <input
+            type="password"
+            value={figmaToken}
+            onChange={(e) => setFigmaToken(e.target.value)}
+            placeholder="Figma token (figd_…) — or save in Settings"
+            className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none transition-all"
+            style={{
+              background: 'var(--bg-input)',
+              border: '1px solid var(--bd-1)',
+              color: 'var(--t1)',
+              fontFamily: 'var(--font-geist-mono)',
+            }}
+            disabled={loading}
+          />
+        )}
       </form>
 
       {error && (

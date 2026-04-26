@@ -25,7 +25,7 @@ export default async function SettingsPage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from('user_api_keys')
-    .select('anthropic_key, openai_key, google_key')
+    .select('anthropic_key, openai_key, google_key, figma_key')
     .eq('user_id', userId)
     .single();
 
@@ -33,6 +33,7 @@ export default async function SettingsPage() {
     anthropic: decode(data?.anthropic_key),
     openai:    decode(data?.openai_key),
     google:    decode(data?.google_key),
+    figma:     decode(data?.figma_key),
   };
 
   return (

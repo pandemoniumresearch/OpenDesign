@@ -9,11 +9,12 @@ interface Props {
     anthropic: KeyStatus;
     openai: KeyStatus;
     google: KeyStatus;
+    figma: KeyStatus;
   };
 }
 
 interface ProviderConfig {
-  id: 'anthropic' | 'openai' | 'google';
+  id: 'anthropic' | 'openai' | 'google' | 'figma';
   label: string;
   description: string;
   placeholder: string;
@@ -41,6 +42,13 @@ const PROVIDERS: ProviderConfig[] = [
     description: 'Powers Gemini 2.0 Flash. Select Gemini as the provider in the editor.',
     placeholder: 'AIzaSy…',
     docsUrl: 'https://aistudio.google.com/app/apikey',
+  },
+  {
+    id: 'figma',
+    label: 'Figma',
+    description: 'Enables design token ingestion from Figma files. Use a personal access token.',
+    placeholder: 'figd_…',
+    docsUrl: 'https://www.figma.com/developers/api#access-tokens',
   },
 ];
 
@@ -243,6 +251,9 @@ function ProviderCard({ config, status }: { config: ProviderConfig; status: KeyS
   );
 }
 
+const LLM_PROVIDERS = PROVIDERS.filter(p => p.id !== 'figma');
+const INTEGRATION_PROVIDERS = PROVIDERS.filter(p => p.id === 'figma');
+
 export function SettingsClient({ initialStatus }: Props) {
   return (
     <div>
@@ -259,7 +270,15 @@ export function SettingsClient({ initialStatus }: Props) {
         Keys are encrypted with AES-256-GCM before storage. They are used only to call AI APIs on your behalf.
       </div>
 
-      {PROVIDERS.map(p => (
+      {LLM_PROVIDERS.map(p => (
+        <ProviderCard key={p.id} config={p} status={initialStatus[p.id]} />
+      ))}
+
+      <div style={{ marginTop: 36, marginBottom: 16, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ink-4)', fontWeight: 600 }}>
+        Design integrations
+      </div>
+
+      {INTEGRATION_PROVIDERS.map(p => (
         <ProviderCard key={p.id} config={p} status={initialStatus[p.id]} />
       ))}
 
