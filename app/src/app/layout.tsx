@@ -25,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full`}
+        suppressHydrationWarning
       >
         <head>
           <script dangerouslySetInnerHTML={{ __html: `try{const t=localStorage.getItem('od-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}` }} />

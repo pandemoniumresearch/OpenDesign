@@ -303,7 +303,7 @@ body {
 /* Paper grain overlay via ::before on elements with this class */
 .grain-stage {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
 }
 .grain-stage::before {
   content: '';
