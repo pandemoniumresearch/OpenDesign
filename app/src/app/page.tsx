@@ -37,7 +37,7 @@ export default async function LandingPage() {
         <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 40px' }}>
           <BrandLogo />
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <NavLink href="#">Docs</NavLink>
+            <NavLink href="/docs">Docs</NavLink>
             <NavLink href="https://github.com/Pandemonium-Research/OpenDesign">GitHub</NavLink>
             <NavLink href="/sign-in">Sign in</NavLink>
             <ThemeToggle />
@@ -154,7 +154,7 @@ export default async function LandingPage() {
           <div>
             <Link href="/sign-in" style={{ color: 'var(--ink-3)', textDecoration: 'none', marginLeft: 20 }}>Sign in</Link>
             <a href="https://github.com/Pandemonium-Research/OpenDesign" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ink-3)', textDecoration: 'none', marginLeft: 20 }}>GitHub</a>
-            <a href="#" style={{ color: 'var(--ink-3)', textDecoration: 'none', marginLeft: 20 }}>Docs</a>
+            <Link href="/docs" style={{ color: 'var(--ink-3)', textDecoration: 'none', marginLeft: 20 }}>Docs</Link>
           </div>
         </footer>
       </div>
