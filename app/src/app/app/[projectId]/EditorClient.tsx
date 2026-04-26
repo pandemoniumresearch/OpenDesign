@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { CanvasPreview } from '@/components/editor/CanvasPreview';
 import { PromptPanel } from '@/components/editor/PromptPanel';
 import { DeckPanel } from '@/components/editor/DeckPanel';
+import { LandingPanel } from '@/components/editor/LandingPanel';
 import { ProviderSelector } from '@/components/editor/ProviderSelector';
 import { BrandTokenPanel } from '@/components/editor/BrandTokenPanel';
 import { ExportPanel } from '@/components/editor/ExportPanel';
@@ -11,6 +12,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import type { Provider } from '@/lib/ai/providers';
 import type { Prototype } from '@/lib/ai/generate-prototype';
 import type { Deck } from '@/lib/ai/generate-deck';
+import type { LandingPage } from '@/lib/ai/generate-landing';
 import type { BrandContext } from '@/lib/ingestion/from-url';
 
 interface EditorClientProps {
@@ -19,7 +21,13 @@ interface EditorClientProps {
   initialBrandContext: BrandContext | null;
 }
 
-type ArtifactMode = 'prototype' | 'deck';
+type ArtifactMode = 'prototype' | 'deck' | 'landing';
+
+const MODE_LABELS: Record<ArtifactMode, string> = {
+  prototype: 'Prototype',
+  deck: 'Deck',
+  landing: 'Landing',
+};
 
 export function EditorClient({ projectId, projectName, initialBrandContext }: EditorClientProps) {
   const [provider, setProvider] = useState<Provider>('anthropic');
@@ -27,6 +35,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
   const [fullHtml, setFullHtml] = useState('');
   const [prototype, setPrototype] = useState<Prototype | null>(null);
   const [deck, setDeck] = useState<Deck | null>(null);
+  const [landingPage, setLandingPage] = useState<LandingPage | null>(null);
   const [artifactId, setArtifactId] = useState<string | undefined>(undefined);
   const [brandContext, setBrandContext] = useState<BrandContext | null>(initialBrandContext);
   const [name, setName] = useState(projectName);
@@ -48,6 +57,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
     setFullHtml(result.fullHtml);
     setPrototype(result.prototype);
     setDeck(null);
+    setLandingPage(null);
     setArtifactId(result.artifactId);
   }
 
@@ -55,6 +65,15 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
     setFullHtml(result.fullHtml);
     setDeck(result.deck);
     setPrototype(null);
+    setLandingPage(null);
+    setArtifactId(result.artifactId);
+  }
+
+  function handleLandingGenerated(result: { fullHtml: string; landingPage: LandingPage; artifactId?: string }) {
+    setFullHtml(result.fullHtml);
+    setLandingPage(result.landingPage);
+    setPrototype(null);
+    setDeck(null);
     setArtifactId(result.artifactId);
   }
 
@@ -62,11 +81,13 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
     setFullHtml(result.fullHtml);
     setPrototype(result.prototype);
     setDeck(null);
+    setLandingPage(null);
     setArtifactId(result.artifactId);
     setArtifactMode('prototype');
   }
 
-  const currentTitle = deck?.title ?? prototype?.title;
+  const currentTitle = deck?.title ?? landingPage?.title ?? prototype?.title;
+  const currentBadge = deck ? 'DECK' : landingPage ? 'LANDING' : null;
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--paper)', color: 'var(--ink)' }}>
@@ -125,7 +146,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
             <div style={{ flex: 1 }} />
             {currentTitle && (
               <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--ink-5)', display: 'flex', alignItems: 'center' }}>
-                {deck && <span style={{ marginRight: 6, padding: '2px 6px', borderRadius: 4, background: 'var(--ac-15)', color: 'var(--ac)', fontSize: 9, fontWeight: 600 }}>DECK</span>}
+                {currentBadge && <span style={{ marginRight: 6, padding: '2px 6px', borderRadius: 4, background: 'var(--ac-15)', color: 'var(--ac)', fontSize: 9, fontWeight: 600 }}>{currentBadge}</span>}
                 {currentTitle}
               </span>
             )}
@@ -142,17 +163,17 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
 
           {/* Artifact type selector */}
           <div className="flex gap-1 p-0.5 rounded-xl" style={{ background: 'var(--paper-2)', border: '1px solid var(--rule)' }}>
-            {(['prototype', 'deck'] as ArtifactMode[]).map((mode) => (
+            {(Object.keys(MODE_LABELS) as ArtifactMode[]).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setArtifactMode(mode)}
-                className="flex-1 py-1.5 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-all"
+                className="flex-1 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider transition-all"
                 style={artifactMode === mode
                   ? { background: 'var(--paper)', color: 'var(--ac)', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }
                   : { color: 'var(--ink-4)', background: 'transparent' }
                 }
               >
-                {mode === 'prototype' ? 'Prototype' : 'Deck'}
+                {MODE_LABELS[mode]}
               </button>
             ))}
           </div>
@@ -161,10 +182,9 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
           <PanelGroup>
             <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Describe</h3>
             <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>
-              {artifactMode === 'deck'
-                ? 'Describe your presentation — topic, audience, tone.'
-                : 'Write a prompt — be specific about tone & structure.'
-              }
+              {artifactMode === 'deck' ? 'Describe your presentation — topic, audience, tone.'
+               : artifactMode === 'landing' ? 'Describe your product or service for the landing page.'
+               : 'Write a prompt — be specific about tone & structure.'}
             </p>
             {artifactMode === 'deck' ? (
               <DeckPanel
@@ -172,6 +192,13 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
                 provider={provider}
                 brandContext={brandContext?.brandContextString}
                 onGenerate={handleDeckGenerated}
+              />
+            ) : artifactMode === 'landing' ? (
+              <LandingPanel
+                projectId={projectId}
+                provider={provider}
+                brandContext={brandContext?.brandContextString}
+                onGenerate={handleLandingGenerated}
               />
             ) : (
               <PromptPanel
@@ -202,7 +229,7 @@ export function EditorClient({ projectId, projectName, initialBrandContext }: Ed
           <PanelGroup>
             <h3 className="serif" style={{ fontStyle: 'italic', fontWeight: 400, fontSize: 20, margin: '0 0 4px', color: 'var(--ink)', letterSpacing: '-0.01em' }}>Export</h3>
             <p style={{ fontSize: 11.5, color: 'var(--ink-4)', margin: '0 0 10px' }}>Deterministic output, yours to keep.</p>
-            <ExportPanel prototype={prototype} fullHtml={fullHtml} artifactId={artifactId} deck={deck} />
+            <ExportPanel prototype={prototype} fullHtml={fullHtml} artifactId={artifactId} deck={deck} landingPage={landingPage} />
           </PanelGroup>
         </aside>
       </div>

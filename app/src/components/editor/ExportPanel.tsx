@@ -8,6 +8,7 @@ interface ExportPanelProps {
   fullHtml: string;
   artifactId?: string;
   deck?: Deck | null;
+  landingPage?: Prototype | null;
 }
 
 type ExportFormat = 'html' | 'pdf' | 'video' | 'pptx';
@@ -24,13 +25,36 @@ const DECK_FORMATS: { format: ExportFormat; label: string; ext: string; desc: st
   { format: 'html', label: 'HTML Slides', ext: '.zip',  desc: 'Scroll-snap preview',  colorVar: 'var(--sky)',  bgVar: 'var(--sky-15)' },
 ];
 
-export function ExportPanel({ prototype, fullHtml, artifactId, deck }: ExportPanelProps) {
+export function ExportPanel({ prototype, fullHtml, artifactId, deck, landingPage }: ExportPanelProps) {
   const [exporting, setExporting] = useState<ExportFormat | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
 
   const isDeck = !!deck;
   const formats = isDeck ? DECK_FORMATS : PROTOTYPE_FORMATS;
-  const hasContent = isDeck ? !!deck : !!prototype;
+  const hasContent = isDeck ? !!deck : !!(prototype ?? landingPage);
+
+  async function handleShare() {
+    if (!artifactId || sharing) return;
+    setSharing(true);
+    try {
+      const res = await fetch('/api/artifacts/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ artifactId }),
+      });
+      if (!res.ok) throw new Error('Share failed');
+      const { shareUrl: url } = await res.json();
+      const fullUrl = `${window.location.origin}${url}`;
+      setShareUrl(fullUrl);
+      await navigator.clipboard.writeText(fullUrl).catch(() => {});
+    } catch {
+      setError('Could not generate share link');
+    } finally {
+      setSharing(false);
+    }
+  }
 
   async function doExport(format: ExportFormat) {
     if (!hasContent || exporting) return;
@@ -87,7 +111,7 @@ export function ExportPanel({ prototype, fullHtml, artifactId, deck }: ExportPan
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      const title = isDeck ? deck!.title : prototype!.title;
+      const title = isDeck ? deck!.title : (prototype ?? landingPage)!.title;
       const slug = title.replace(/\s+/g, '-').toLowerCase();
       a.download = format === 'pptx' ? `${slug}.pptx`
         : format === 'pdf' ? `${slug}.pdf`
@@ -135,10 +159,45 @@ export function ExportPanel({ prototype, fullHtml, artifactId, deck }: ExportPan
           </button>
         );
       })}
+      {/* Share link */}
+      {artifactId && hasContent && (
+        <button
+          onClick={handleShare}
+          disabled={sharing}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all text-left disabled:opacity-40"
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--bd-1)' }}
+        >
+          <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: 'var(--ac-15)' }}>
+            {sharing
+              ? <span className="animate-spin h-3 w-3 rounded-full" style={{ border: '1.5px solid var(--ac-15)', borderTopColor: 'var(--ac)' }} />
+              : <LinkIcon />
+            }
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium leading-none" style={{ color: 'var(--t1)' }}>
+              {sharing ? 'Generating link…' : shareUrl ? 'Link copied!' : 'Share link'}
+            </p>
+            {shareUrl
+              ? <p className="text-[10px] mt-1 leading-none truncate" style={{ color: 'var(--ac)' }}>{shareUrl}</p>
+              : <p className="text-[10px] mt-1 leading-none" style={{ color: 'var(--t5)' }}>Public URL, no login required</p>
+            }
+          </div>
+        </button>
+      )}
+
       {error && <p className="text-xs mt-1" style={{ color: 'var(--err)' }}>{error}</p>}
       {!hasContent && (
         <p className="text-[10px] text-center mt-1" style={{ color: 'var(--t5)' }}>Generate an artifact first</p>
       )}
     </div>
+  );
+}
+
+function LinkIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M5 6.5a2.5 2.5 0 0 0 3.536.036l1.5-1.5A2.5 2.5 0 0 0 6.5 1.5L5.75 2.25" stroke="var(--ac)" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M7 5.5a2.5 2.5 0 0 0-3.536-.036l-1.5 1.5A2.5 2.5 0 0 0 5.5 10.5l.75-.75" stroke="var(--ac)" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
   );
 }
